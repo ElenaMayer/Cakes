@@ -30,12 +30,7 @@ IeAsset::register($this);
 </head>
 <body>
     <?php $this->beginBody() ?>
-    <div class="noo-spinner">
-        <div class="spinner">
-            <div class="cube1"></div>
-            <div class="cube2"></div>
-        </div>
-    </div>
+
     <div class="site">
         <header class="noo-header header-2 header-static">
             <div class="noo-topbar">
@@ -45,7 +40,7 @@ IeAsset::register($this);
                             <a class="link" onclick="$('#w1').modal()"><i class="fa fa-map-marker"></i> <span><?=Yii::$app->cache->get('location')?></span></a>
                         </li>
                         <li>
-                            <a href="tel:<?= Yii::$app->params['phone1'] ?>"><i class="fa fa-phone"></i><?= Yii::$app->params['phone1'] ?></a>
+                            <a href="tel:<?= Yii::$app->params['phone'] ?>"><i class="fa fa-phone"></i><?= Yii::$app->params['phone'] ?></a>
                         </li>
                         <li>
                             <div class="noo_social">
@@ -239,7 +234,7 @@ IeAsset::register($this);
                             <h4 class="widget-title">Контакты</h4>
                             <ul class="noo-openhours">
                                 <li>
-                                    <i class="fa fa-phone"></i><a href="tel:<?= Yii::$app->params['phone1'] ?>"><?= Yii::$app->params['phone1'] ?></a>
+                                    <i class="fa fa-phone"></i><a href="tel:<?= Yii::$app->params['phone'] ?>"><?= Yii::$app->params['phone'] ?></a>
                                 </li>
                                 <li>
                                     <i class="fa fa-envelope"></i><a href="mailto:<?= Yii::$app->params['email'] ?>">
@@ -251,13 +246,6 @@ IeAsset::register($this);
                         <div class="widget widget_noo_happyhours">
                             <!--Самовывозы-->
                             <p class="widget-title">Время обработки <br>заказов</p>
-                            <ul class="noo-happyhours">
-                                <?php foreach (Yii::$app->params['pickup_time'] as $time):?>
-                                    <li>
-                                        <div><?= $time?></div>
-                                    </li>
-                                <?php endforeach;?>
-                            </ul>
                             <span></span>
                             <span></span>
                             <span></span>

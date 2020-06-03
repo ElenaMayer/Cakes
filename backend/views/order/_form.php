@@ -21,13 +21,7 @@ use \common\models\Order;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'is_ul')->checkbox() ?>
-
     <?= $form->field($model, 'shipping_method')->dropDownList(Order::getShippingMethodsLite()) ?>
-
-    <div class="shipping_method_field method_self" <?php if($model->shipping_method != 'self'):?>style="display: none"<?php endif;?>">
-        <?= $form->field($model, 'pickup_time')->dropDownList(Yii::$app->params['pickup_time']) ?>
-    </div>
 
     <div class="shipping_method_field address_field" <?php if($model->shipping_method != 'rp' && $model->shipping_method != 'shipping'):?>style="display: none"<?php endif;?>">
         <?= $form->field($model, 'address')->textInput(['maxlength' => 255]) ?>

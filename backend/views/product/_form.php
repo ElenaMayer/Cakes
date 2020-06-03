@@ -21,21 +21,23 @@ use common\models\Category;
 
     <?= $form->field($model, 'category_id')->dropDownList(Category::getCategoryArray(), ['prompt' => 'Выберите категорию ...']) ?>
 
-    <?= $form->field($model, 'subcategories')->widget(DepDrop::classname(), [
-        'data'=> Category::getSubcategoryArray($model->category_id),
-        'options' => [
-            'multiple' => true,
-        ],
-        'type' => DepDrop::TYPE_SELECT2,
-        'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-        'pluginOptions'=>[
-            'depends'=>['product-category_id'],
-            'url' => Url::to(['/product/get_subcategories']),
-            'loadingText' => 'Загрузка ...',
-            'tokenSeparators'=>[',',' '],
-            'placeholder' => 'Выберите подкатегории ...',
-        ],
-    ]) ?>
+    <?php if(Yii::$app->params['components']['product_subcategories']):?>
+        <?= $form->field($model, 'subcategories')->widget(DepDrop::classname(), [
+            'data'=> Category::getSubcategoryArray($model->category_id),
+            'options' => [
+                'multiple' => true,
+            ],
+            'type' => DepDrop::TYPE_SELECT2,
+            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+            'pluginOptions'=>[
+                'depends'=>['product-category_id'],
+                'url' => Url::to(['/product/get_subcategories']),
+                'loadingText' => 'Загрузка ...',
+                'tokenSeparators'=>[',',' '],
+                'placeholder' => 'Выберите подкатегории ...',
+            ],
+        ]) ?>
+    <?php endif;?>
 
     <?= $form->field($model, 'is_in_stock')->checkbox() ?>
 
@@ -49,12 +51,15 @@ use common\models\Category;
 
     <?= $form->field($model, 'size')->textInput(['maxlength' => true]) ?>
 
-    <?= $form->field($model, 'count')->textInput(['maxlength' => true]) ?>
+    <?php if(Product::cCounting()):?>
+        <?= $form->field($model, 'count')->textInput(['maxlength' => true]) ?>
+    <?php endif;?>
 
     <?= $form->field($model, 'weight')->textInput() ?>
 
     <?= $form->field($model, 'description')->textarea(['rows' => 6]) ?>
 
+    <?php if(Yii::$app->params['components']['product_color']):?>
     <?= $form->field($model, 'color')->widget(Select2::classname(), [
         'options' => [
             'multiple' => true,
@@ -66,7 +71,9 @@ use common\models\Category;
             'tokenSeparators'=>[',',' '],
         ],
     ]) ?>
+    <?php endif;?>
 
+    <?php if(Yii::$app->params['components']['product_tags']):?>
     <?= $form->field($model, 'tags')->widget(Select2::classname(), [
         'options' => [
             'multiple' => true,
@@ -78,6 +85,7 @@ use common\models\Category;
             'tokenSeparators'=>[',',' '],
         ],
     ]) ?>
+    <?php endif;?>
 
     <?= $form->field($model, 'instruction')->textInput() ?>
 
@@ -95,15 +103,24 @@ use common\models\Category;
         ],
     ]) ?>
 
-    <?= $this->render('_price', [
-        'model' => $model,
-        'form' => $form,
-    ]);?>
+    <?php if(Product::cMultiprice()):?>
+        <?= $this->render('_price', [
+            'model' => $model,
+            'form' => $form,
+        ]);?>
+    <?php else:?>
+        <div>
+            <?= $form->field($model, 'price')->textInput(['maxlength' => true]) ?>
+            <?= $form->field($model, 'new_price')->textInput(['maxlength' => true]) ?>
+        </div>
+    <?php endif;?>
 
-    <?= $this->render('_diversity', [
-        'model' => $model,
-        'form' => $form,
-    ]);?>
+    <?php if(Product::cDiversity()):?>
+        <?= $this->render('_diversity', [
+            'model' => $model,
+            'form' => $form,
+        ]);?>
+    <?php endif;?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>

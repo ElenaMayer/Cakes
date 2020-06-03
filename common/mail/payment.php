@@ -1,11 +1,6 @@
 <?php
 /* @var $order common\models\Order */
 
-$timePV = '';
-foreach(Yii::$app->params['pickup_time'] as $time){
-    $timePV .= $time.', ';
-}
-$timePV = trim(trim($timePV));
 ?>
 
 <h1>Заказ #<?= $order->id ?> успешно оплачен!</h1>

@@ -14,7 +14,7 @@ $this->params['breadcrumbs'][] = $this->title;
 ?>
 <div class="order-view">
 
-    <h1><?= Html::encode($this->title) ?> <?php if($model->is_ul):?><span class="red">ЮЛ</span><?php endif;?></h1>
+    <h1><?= Html::encode($this->title) ?></h1>
 
     <p>
         <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
@@ -49,23 +49,12 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             'city',
-            $model->shipping_method == 'self' ?
-                [
-                'attribute' => 'pickup_time',
+            [
+                'attribute' => 'address',
                 'value' => function ($model) {
-                    if(isset(Yii::$app->params['pickup_time'][$model->pickup_time])){
-                        return Yii::$app->params['pickup_time'][$model->pickup_time];
-                    } else {
-                        return $model->pickup_time;
-                    }
+                    return $model->address;
                 },
-            ] : (
-                [
-                    'attribute' => 'address',
-                    'value' => function ($model) {
-                        return $model->address;
-                    },
-                ]),
+            ],
             [
                 'attribute' => 'payment_method',
                 'value' => function ($model) {

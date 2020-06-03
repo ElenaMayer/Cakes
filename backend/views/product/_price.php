@@ -4,7 +4,6 @@ use common\models\ProductPrice;
 ?>
 
 <hr>
-
 <?= $form->field($model, 'multiprice')->checkbox() ?>
 
 <div class="price-without-count" style="display: none">

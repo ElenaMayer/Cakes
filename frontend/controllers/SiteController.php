@@ -44,7 +44,6 @@ class SiteController extends Controller
                     'logout' => ['post'],
                 ],
             ],
-            'geoBehavior' => GeoBehavior::className(),
         ];
     }
 

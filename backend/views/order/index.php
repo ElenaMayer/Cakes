@@ -24,7 +24,7 @@ $this->params['breadcrumbs'][] = $this->title;
         'dataProvider' => $dataProvider,
         'filterModel' => $searchModel,
         'rowOptions' => function($model) {
-            return ['class' => [$model->status, $model->is_ul ? 'ul' : '']];
+            return ['class' => [$model->status]];
         },
         'columns' => [
             [
@@ -64,8 +64,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     if ($model->shipping_method == 'self') {
                         if($model->notes)
                             return "Самовывоз ($model->notes)";
-                        elseif($model->pickup_time)
-                            return "Самовывоз (" . Yii::$app->params['pickup_time'][$model->pickup_time] . ")";
                         else
                             return 'Самовывоз';
                     } else {

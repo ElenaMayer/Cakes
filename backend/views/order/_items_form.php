@@ -56,7 +56,7 @@ use common\models\ProductDiversity;
             <tr <?php if($item->product->category->slug == 'sale'):?>class="sale"<?php endif;?>>
                 <td>
                     <div class="product-image">
-                        <?php if($item->diversity_id):?>
+                        <?php if(Product::cDiversity() && $item->diversity_id):?>
                             <a href="/product/view?id=<?= $item->product->id?>">
                                 <?php $div = ProductDiversity::findOne($item->diversity_id);?>
                                 <?= Html::img($div->image->getUrl('small'));?>
@@ -69,7 +69,7 @@ use common\models\ProductDiversity;
                     </div>
                 </td>
                 <td>
-                    <?php if($item->diversity_id):?>
+                    <?php if(Product::cDiversity() && $item->diversity_id):?>
                         <?php echo $item->title . ' ' . ($item->product_id ? $item->product->size . 'см (Арт. '. $item->diversity->article .')' : '');?>
                     <?php else:?>
                         <?php echo $item->title . ' ' . ($item->product_id ? $item->product->size . 'см (Арт. '. $item->product->article .')' : '');?>

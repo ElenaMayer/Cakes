@@ -12,11 +12,16 @@ use common\models\OrderItem;
 use common\models\Product;
 use yii\web\Controller;
 use yii\data\ActiveDataProvider;
+use Yii;
 
 class HistoryController extends Controller
 {
     public function actionIndex($id)
     {
+        if(!Yii::$app->params['components']['product_history']){
+            throw new \yii\web\NotFoundHttpException();
+        }
+
         $query = OrderItem::find();
         $model = Product::findOne($id);
 

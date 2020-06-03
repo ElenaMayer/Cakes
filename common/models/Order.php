@@ -23,15 +23,11 @@ use yii\behaviors\TimestampBehavior;
  * @property string $shipping_method
  * @property string $payment_method
  * @property integer $zip
- * @property string $tk
- * @property string $rcr
- * @property string $pickup_time
  * @property integer $discount
  * @property string $payment_id
  * @property string $payment_url
  * @property string $payment_error
  * @property string $shipping_number
- * @property integer $is_ul
  *
  * @property OrderItem[] $orderItems
  */
@@ -68,9 +64,9 @@ class Order extends \yii\db\ActiveRecord
     public function rules()
     {
         return [
-            [['created_at', 'updated_at', 'shipping_cost', 'zip', 'discount', 'is_ul'], 'integer'],
+            [['created_at', 'updated_at', 'shipping_cost', 'zip', 'discount'], 'integer'],
             [['address', 'notes'], 'string'],
-            [['phone', 'email', 'status', 'fio', 'city', 'shipping_method', 'payment_method', 'tk', 'rcr', 'pickup_time',
+            [['phone', 'email', 'status', 'fio', 'city', 'shipping_method', 'payment_method',
                 'payment', 'payment_id', 'payment_url', 'payment_error', 'shipping_number'], 'string', 'max' => 255],
             [['phone', 'fio'], 'required'],
             [['email'], 'trim'],
@@ -99,13 +95,9 @@ class Order extends \yii\db\ActiveRecord
             'shipping_method' => 'Способ доставки',
             'payment_method' => 'Способ оплаты',
             'zip' => 'Индекс',
-            'tk' => 'Транспортная компания',
-            'rcr' => 'Пункт выдачи РЦР',
-            'pickup_time' => 'Время получения',
             'discount' => 'Скидка',
             'payment_error' => 'Ошибка оплаты',
             'shipping_number' => 'Трэк/накладная',
-            'is_ul' => 'Юридическое лицо',
             'payment_url' => 'Ссылка на оплату',
         ];
     }
@@ -133,13 +125,14 @@ class Order extends \yii\db\ActiveRecord
 
                             foreach ($this->orderItems as $item){
 
-                                if(!$item->diversity_id){
-                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count+$item->quantity) . 'шт', 'order');
-                                } else {
+                                if(Product::cDiversity() && $item->diversity_id){
                                     Yii::debug('Расцветка Арт.' . $item->diversity->article . ' ' . $item->diversity->count . ' -> ' . ($item->diversity->count+$item->quantity) . 'шт', 'order');
+                                } else {
+                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count+$item->quantity) . 'шт', 'order');
                                 }
-
-                                $item->product->plusCount($item->quantity, $item->diversity_id);
+                                if(Product::cCounting()){
+                                    $item->product->changeCount('plus', $item->quantity, $item->diversity_id);
+                                }
                             }
                         } elseif($oldAttributes['status'] == self::STATUS_CANCELED){
 
@@ -147,13 +140,14 @@ class Order extends \yii\db\ActiveRecord
 
                             foreach ($this->orderItems as $item){
 
-                                if(!$item->diversity_id){
-                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count-$item->quantity) . 'шт', 'order');
-                                } else {
+                                if(Product::cDiversity() && $item->diversity_id){
                                     Yii::debug('Расцветка Арт.' . $item->diversity->article . ' ' . $item->diversity->count . ' -> ' . ($item->diversity->count-$item->quantity) . 'шт', 'order');
+                                } else {
+                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count-$item->quantity) . 'шт', 'order');
                                 }
-
-                                $item->product->minusCount($item->quantity, $item->diversity_id);
+                                if(Product::cCounting()) {
+                                    $item->product->changeCount('minus', $item->quantity, $item->diversity_id);
+                                }
                             }
                         }
                     }
@@ -301,7 +295,9 @@ class Order extends \yii\db\ActiveRecord
 
         foreach ($this->orderItems as $item) {
             $product = Product::findOne($item->product_id);
-            $product->plusCount($item->quantity, $item->diversity_id);
+            if(Product::cCounting()) {
+                $product->changeCount('plus', $item->quantity, $item->diversity_id);
+            }
         }
 
         return true;

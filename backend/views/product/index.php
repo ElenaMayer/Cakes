@@ -15,20 +15,20 @@ $this->params['breadcrumbs'][] = $this->title;
 <div class="product-index">
 
     <h1><?= Html::encode($this->title) ?></h1>
-    <?php // echo $this->render('_search', ['model' => $searchModel]); ?>
 
-    <p class="index-full">
-        <?= Html::a('Полный вид', ['index_full'], ['class' => 'btn btn-info']) ?>
-    </p>
+    <?php if(Product::cDiversity()):?>
+        <p class="index-full">
+            <?= Html::a('Полный вид', ['index_full'], ['class' => 'btn btn-info']) ?>
+        </p>
+    <?php endif;?>
+
     <p>
         <?= Html::a('Добавить товар', ['create'], ['class' => 'btn btn-success']) ?>
     </p>
 
-    <?= GridView::widget([
-        'dataProvider' => $dataProvider,
-        'filterModel' => $searchModel,
-        'columns' => [
-            [
+    <?php
+        $columns = [
+                [
                 'format' => 'image',
                 'value'=>function($model) { return isset($model->images[0])?$model->images[0]->getUrl('small'):''; }
             ],
@@ -46,7 +46,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'price',
                 'format' => 'html',
                 'value' => function ($model) {
-                    if($model->multiprice) {
+                    if(Product::cMultiprice() && $model->multiprice) {
                         return $model->getMultipricesStr();
                     } elseif($model->new_price) {
                         return '<s>' . $model->price . '</s> ' . $model->new_price;
@@ -55,12 +55,13 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                 },
             ],
-            'size',
-            [
+            'size'];
+        if(Product::cCounting()){
+            array_push($columns, [
                 'attribute'=>'count',
                 'format' => 'html',
                 'value' => function ($model) {
-                    if($model->diversity) {
+                    if(Product::cDiversity() && $model->diversity) {
                         $result = '';
                         foreach ($model->diversities as $diversity){
                             $result .= $diversity->count . '/';
@@ -69,8 +70,9 @@ $this->params['breadcrumbs'][] = $this->title;
                     } else
                         return $model->count;
                 },
-            ],
-            [
+            ]);
+        }
+        array_push($columns, [
                 'attribute'=>'is_active',
                 'value' => function ($model) {
                     return $model->is_active ? 'Да' : 'Нет';
@@ -96,24 +98,35 @@ $this->params['breadcrumbs'][] = $this->title;
                 'template' => '{view} {update} {history} {copy}',
                 'buttons' => [
                     'history' => function ($url, $model, $key) {
-                        return Html::a('<span class="glyphicon glyphicon-repeat"></span>',
-                            "/history/index?id=$model->id",
-                            [
-                            'title' => 'History',
-                            'data-pjax' => '0',
-                        ]);
+                        if(Yii::$app->params['components']['product_copy'])
+                            return Html::a('<span class="glyphicon glyphicon-repeat"></span>',
+                                "/history/index?id=$model->id",
+                                [
+                                    'title' => 'History',
+                                    'data-pjax' => '0',
+                                ]);
+                        else
+                            return false;
                     },
                     'copy' => function ($url, $model, $key) {
-                        return Html::a('<span class="glyphicon glyphicon-plus"></span>',
-                            "/product/copy?id=$model->id",
-                            [
-                                'title' => 'Copy',
-                                'data-pjax' => '0',
-                            ]);
+                        if(Yii::$app->params['components']['product_copy'])
+                            return Html::a('<span class="glyphicon glyphicon-plus"></span>',
+                                "/product/copy?id=$model->id",
+                                [
+                                    'title' => 'Copy',
+                                    'data-pjax' => '0',
+                                ]);
+                        else
+                            return false;
                     },
                 ],
-            ],
-        ],
+            ]);
+    ?>
+
+    <?= GridView::widget([
+        'dataProvider' => $dataProvider,
+        'filterModel' => $searchModel,
+        'columns' => $columns,
     ]); ?>
 
 </div>

@@ -29,8 +29,8 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'format' => 'html',
                 'value'=>function($model) {
-                        return Html::a('<img src="'.$model->getImageWithDiversity($model->diversity_id).'">', Url::to(['/product/update', 'id' => $model->id]));
-                        }
+                    return Html::a('<img src="'.$model->getImageWithDiversity($model->diversity_id).'">', Url::to(['/product/update', 'id' => $model->id]));
+                }
             ],
             [
                 'attribute'=>'id',

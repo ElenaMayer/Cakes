@@ -96,13 +96,13 @@ class ProductController extends Controller
 
         if($this->processingProduct($model)) {
 
-            if(!$model->diversity) {
-                Yii::debug('Добавлен товар Арт.' . $model->article . ': ' . $model->count . 'шт', 'order');
-            } else {
+            if(Product::cDiversity() && $model->diversity) {
                 Yii::debug('Добавлен товар Арт.' . $model->article . ' ->', 'order');
                 foreach ($model->diversities as $diversity){
                     Yii::debug('Расцветка Арт.' . $diversity->article . ': ' . $diversity->count . 'шт', 'order');
                 }
+            } else {
+                Yii::debug('Добавлен товар Арт.' . $model->article . ': ' . $model->count . 'шт', 'order');
             }
 
             return $this->redirect(['view', 'id' => $model->id]);
@@ -134,12 +134,16 @@ class ProductController extends Controller
 
     public function actionCopy($id){
 
+        if(!Yii::$app->params['components']['product_copy']){
+            throw new \yii\web\NotFoundHttpException();
+        }
+
         $product = Product::findOne($id);
         $productNew = new Product();
         $productNew->attributes = $product->attributes;
         $productNew->is_active = false;
         $productNew->is_in_stock = false;
-        $productNew->article = $product->article . '_8';
+        $productNew->article = $product->article . '_1';
         $productNew->count = 0;
         $productNew->color = $product->color;
         $productNew->subcategories = $product->subcategories;
@@ -160,7 +164,7 @@ class ProductController extends Controller
             $diversityNew->attributes = $diversity->attributes;
             $diversityNew->image_id = $imageNew->id;
             $diversityNew->product_id = $productNew->id;
-            $diversityNew->article = $diversity->article . '_8';
+            $diversityNew->article = $diversity->article . '_1';
             $diversityNew->count = 0;
             $diversityNew->save(false);
 
@@ -186,21 +190,21 @@ class ProductController extends Controller
 
     public function processingProduct($model){
         if($post = Yii::$app->request->post()) {
-            if (is_array($post['Product']['color'])) {
+            if (Yii::$app->params['components']['product_color'] && is_array($post['Product']['color'])) {
                 $model->color = implode(",", $post['Product']['color']);
             }
-            if (is_array($post['Product']['tags'])) {
+            if (Yii::$app->params['components']['product_tags'] && is_array($post['Product']['tags'])) {
                 $model->tags = implode(",", $post['Product']['tags']);
             }
-            if (is_array($post['Product']['subcategories']))
+            if (Yii::$app->params['components']['product_subcategories'] && is_array($post['Product']['subcategories']))
             {
                 $model->subcategories = implode(",",$post['Product']['subcategories']);
             }
-            if (is_array($post['ProductPrice']))
+            if (Product::cMultiprice() && is_array($post['ProductPrice']))
             {
                 $model->productPrices = $post['ProductPrice'];
             }
-            if (is_array($post['ProductDiversity']))
+            if (Product::cDiversity() && is_array($post['ProductDiversity']))
             {
                 $model->productDiversities = $post['ProductDiversity'];
 
@@ -225,7 +229,7 @@ class ProductController extends Controller
                     Yii::debug('<- Редактирование товара Арт.' . $model->article, 'order');
                 }
             }
-            if(!$model->diversity && $post['Product']['count'] != $model->count) {
+            if(Product::cCounting() && !$model->diversity && $post['Product']['count'] != $model->count) {
 
                 Yii::debug('Редактирование товар Арт.' . $model->article . ' ' . $model->count . ' -> ' . $post['Product']['count']  . 'шт', 'order');
 
@@ -246,9 +250,15 @@ class ProductController extends Controller
                 return false;
             }
         } else {
-            $model->color = !empty($model->color)?explode(",",$model->color):[];
-            $model->tags = !empty($model->tags)?explode(",",$model->tags):[];
-            $model->subcategories = !empty($model->subcategories)?explode(",",$model->subcategories):[];
+            if (Yii::$app->params['components']['product_color'] && is_array($post['Product']['color'])) {
+                $model->color = !empty($model->color)?explode(",",$model->color):[];
+            }
+            if (Yii::$app->params['components']['product_tags'] && is_array($post['Product']['tags'])) {
+                $model->tags = !empty($model->tags)?explode(",",$model->tags):[];
+            }
+            if (Yii::$app->params['components']['product_subcategories'] && is_array($post['Product']['subcategories'])) {
+                $model->subcategories = !empty($model->subcategories) ? explode(",", $model->subcategories) : [];
+            }
             return false;
         }
     }

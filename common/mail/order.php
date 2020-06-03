@@ -3,14 +3,12 @@
 use yii\helpers\Html;
 use common\models\Order;
 use common\models\ProductDiversity;
+use common\models\Product;
 ?>
 
 <h1>Заказ #<?= $order->id ?> успешно создан.</h1>
 
 <ul style="list-style: none;">
-    <?php if($order->is_ul):?>
-        <li><b>Юридическое лицо</b></li>
-    <?php endif;?>
     <li><b>ФИО:</b> <?= Html::encode($order->fio) ?></li>
     <li><b>Телефон:</b> <?= Html::encode($order->phone) ?></li>
     <?php if($order->email):?>
@@ -48,7 +46,7 @@ use common\models\ProductDiversity;
         <tr>
             <td>
                 <div class="product-image">
-                    <?php if($item->diversity_id):?>
+                    <?php if(Product::cDiversity() && $item->diversity_id):?>
                         <?php $div = ProductDiversity::findOne($item->diversity_id);
                         if($div):?>
                             <a href="<?= Yii::$app->params['domain']; ?>/catalog/<?= $item->product->category->slug ?>/<?= $item->product_id ?>/<?=$item->diversity_id?>">

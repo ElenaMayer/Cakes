@@ -24,7 +24,6 @@ class CartController extends \yii\web\Controller
                     ['allow' => true, 'actions' => ['history', 'historyItem'], 'roles' => ['@']],
                 ],
             ],
-            'geoBehavior' => GeoBehavior::className(),
         ];
     }
 
@@ -33,7 +32,7 @@ class CartController extends \yii\web\Controller
         $product = Product::findOne($id);
         if ($product) {
             $position = $product->getCartPosition();
-            if ($diversity_id)
+            if (Product::cDiversity() && $diversity_id)
                 $position->diversity_id = $diversity_id;
             $cart = \Yii::$app->cart;
             $cart->put($position, $quantity);
@@ -197,7 +196,7 @@ class CartController extends \yii\web\Controller
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;
                 $orderItem->title = $product->title;
-                if($position->diversity_id){
+                if(Product::cDiversity() && $position->diversity_id){
                     $orderItem->diversity_id = $position->diversity_id;
                     $diversity = ProductDiversity::findOne($position->diversity_id);
                     $orderItem->title .= ' "' . $diversity->title . '"';

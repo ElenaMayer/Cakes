@@ -28,7 +28,7 @@ class m141123_221351_shop extends Migration
             'slug' => Schema::TYPE_STRING,
             'description' => Schema::TYPE_TEXT,
             'category_id' => Schema::TYPE_INTEGER,
-            'price' => Schema::TYPE_MONEY,
+            'price' => Schema::TYPE_INTEGER,
         ], $tableOptions);
 
         $this->addForeignKey('fk-product-category_id-category_id', '{{%product}}', 'category_id', '{{%category}}', 'id', 'RESTRICT');

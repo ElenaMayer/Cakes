@@ -33,8 +33,14 @@ $this->params['breadcrumbs'][] = $this->title;
     </div>
     <p>
         <?= Html::a('Редактировать', ['update', 'id' => $model->id], ['class' => 'btn btn-primary']) ?>
-        <?= Html::a('Копировать', ['copy', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
-        <?= Html::a('История', ['/history/index', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+
+        <?php if(Yii::$app->params['components']['product_copy']):?>
+            <?= Html::a('Копировать', ['copy', 'id' => $model->id], ['class' => 'btn btn-info']) ?>
+        <?php endif;?>
+
+        <?php if(Yii::$app->params['components']['product_history']):?>
+            <?= Html::a('История', ['/history/index', 'id' => $model->id], ['class' => 'btn btn-warning']) ?>
+        <?php endif;?>
         <?= Html::a('Удалить', ['delete', 'id' => $model->id], [
             'class' => 'btn btn-danger',
             'data' => [
@@ -44,9 +50,8 @@ $this->params['breadcrumbs'][] = $this->title;
         ]) ?>
     </p>
 
-    <?= DetailView::widget([
-        'model' => $model,
-        'attributes' => [
+    <?php
+        $attributes = [
             'id',
             'article',
             'title',
@@ -58,6 +63,22 @@ $this->params['breadcrumbs'][] = $this->title;
                 },
             ],
             [
+                'attribute'=>'price',
+                'format' => 'html',
+                'value' => function ($model) {
+                    if(Product::cMultiprice() && $model->multiprice) {
+                        return $model->getMultipricesStrFull();
+                    } elseif($model->new_price) {
+                        return '<s>' . $model->price . '</s> ' . $model->new_price;
+                    } else {
+                        return $model->price;
+                    }
+                },
+            ],
+            'size',
+        ];
+        if(Yii::$app->params['components']['product_subcategories']){
+            array_push($attributes, [
                 'attribute' => 'subcategories',
                 'value' => function ($model) {
                     $subcatArr = [];
@@ -68,48 +89,67 @@ $this->params['breadcrumbs'][] = $this->title;
                     }
                     return implode(",", $subcatArr);
                 },
-            ],
-            [
-                'attribute'=>'price',
-                'format' => 'html',
-                'value' => function ($model) {
-                    if($model->multiprice) {
-                        return $model->getMultipricesStrFull();
-                    } elseif($model->new_price) {
-                        return '<s>' . $model->price . '</s> ' . $model->new_price;
-                    } else {
-                        return $model->price;
-                    }
-                },
-            ],
-            'size',
-            'color',
-            [
-                'attribute'=>'count',
-                'format' => 'html',
-                'value' => function ($model) {
-                    if($model->diversity) {
-                        $result = '';
-                        foreach ($model->diversities as $diversity){
-                            $result .= $diversity->title . ' - ' . $diversity->count . 'шт <br>';
-                        }
-                    return $result;
-                    } else
-                        return $model->count;
-                },
-            ],
-            'weight',
-            'tags',
-            'is_active',
+            ]);
+        }
+
+        if(Yii::$app->params['components']['product_color']){
+            array_push($attributes,
+                'color');
+            }
+
+        if(Product::cCounting()){
+            array_push($attributes,
+                [
+                    'attribute'=>'count',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if(Product::cDiversity() && $model->diversity) {
+                            $result = '';
+                            foreach ($model->diversities as $diversity){
+                                $result .= $diversity->title . ' - ' . $diversity->count . 'шт <br>';
+                            }
+                            return $result;
+                        } else
+                            return $model->count;
+                    },
+                ]);
+        }
+        if(Yii::$app->params['components']['product_subcategories']){
+            array_push($attributes,
+                'color',
+                [
+                    'attribute'=>'count',
+                    'format' => 'html',
+                    'value' => function ($model) {
+                        if($model->diversity) {
+                            $result = '';
+                            foreach ($model->diversities as $diversity){
+                                $result .= $diversity->title . ' - ' . $diversity->count . 'шт <br>';
+                            }
+                            return $result;
+                        } else
+                            return $model->count;
+                    },
+                ],
+                'tags');
+        }
+
+        array_push($attributes,
+        'weight',
+        'is_active',
             'is_in_stock',
             'is_novelty',
             'instruction',
             'sort',
-            'time'
-        ],
+            'time');
+    ?>
+
+    <?= DetailView::widget([
+        'model' => $model,
+        'attributes' => $attributes,
     ]) ?>
 
-    <?php if($model->diversity && $model->diversities):?>
+    <?php if(Product::cDiversity() && $model->diversity && $model->diversities):?>
         <h2>Расцветка</h2>
 
         <table class="table table-striped table-bordered">

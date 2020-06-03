@@ -123,4 +123,5 @@ class ProductDiversity extends \yii\db\ActiveRecord
         }
         return $divArray;
     }
+
 }

@@ -130,6 +130,26 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
         ];
     }
 
+    public static function cDiversity(){
+        if(Product::cDiversity())
+            return true;
+        else return false;
+    }
+
+    public static function cCounting(){
+        if(Product::cCounting())
+            return true;
+        else return false;
+    }
+
+    public static function cMultiprice(){
+        if(Product::cMultiprice())
+            return true;
+        else return false;
+    }
+
+
+
     public function upload()
     {
         if ($this->validate()) {
@@ -237,7 +257,7 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     public function getIsActive($diversityId = null)
     {
         $product = Product::findOne($this->id);
-        if($product->diversity && $diversityId){
+        if(Product::cDiversity() && $product->diversity && $diversityId){
             $diversity = ProductDiversity::findOne($diversityId);
             return $diversity->is_active;
         } else {
@@ -248,19 +268,22 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     public function getIsInStock($diversityId = null)
     {
         $product = Product::findOne($this->id);
-        if($product->diversity && $diversityId){
-            $diversity = ProductDiversity::findOne($diversityId);
-            return ($diversity->count > 0);
-        } else {
-            if($product->diversity){
-                foreach ($product->diversities as $div){
-                    if($div->count > 0)
-                        return true;
+        if(Product::cCounting()) {
+            if(Product::cDiversity() && $product->diversity){
+                if ($diversityId) {
+                    $diversity = ProductDiversity::findOne($diversityId);
+                    return ($diversity->count > 0);
+                } else {
+                    foreach ($product->diversities as $div) {
+                        if ($div->count > 0)
+                            return true;
+                    }
                 }
-                return false;
             } else {
                 return ($product->is_in_stock && $product->count > 0);
             }
+        } else {
+            return $product->is_in_stock;
         }
     }
 
@@ -376,8 +399,16 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
         $this->relationsArr = ArrayHelper::map($this->relations, 'id', 'child_id');
     }
 
-    public function minusCount($count, $diversityId = null){
-        if($diversityId){
+    public function changeCount($type, $count, $diversityId = null){
+        if($type == 'plus'){
+            $this->plusCount($count, $diversityId);
+        } else {
+            $this->minusCount($count, $diversityId);
+        }
+    }
+
+    private function minusCount($count, $diversityId = null){
+        if(Product::cDiversity() && $diversityId){
             $diversity = ProductDiversity::findOne($diversityId);
             if($diversity) {
                 $diversity->count -= $count;
@@ -405,8 +436,8 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
         }
     }
 
-    public function plusCount($count, $diversityId = null){
-        if($diversityId){
+    private function plusCount($count, $diversityId = null){
+        if(Product::cDiversity() && $diversityId){
             $diversity = ProductDiversity::findOne($diversityId);
             if($diversity) {
                 $diversity->count += $count;
@@ -472,7 +503,7 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     {
         if (parent::beforeSave($insert)) {
             $this->weight = str_replace(',', '.', $this->weight);
-            if(!$this->diversity) {
+            if(Product::cCounting() && !$this->diversity) {
                 if ($this->count > 0)
                     $this->is_in_stock = 1;
                 else
@@ -557,8 +588,10 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
 
     public function afterSave($insert, $changedAttributes){
         parent::afterSave($insert, $changedAttributes);
-        $this->savePrices();
-        $this->saveDiversities();
+        if(Product::cMultiprice())
+            $this->savePrices();
+        if(Product::cDiversity())
+            $this->saveDiversities();
     }
 
     public function savePrices()
@@ -646,7 +679,7 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     }
 
     public function getMinMultiprice(){
-        if($this->diversity){
+        if(Product::cDiversity() && $this->diversity){
             $count = 0;
             foreach ($this->diversities as $diversity){
                 if($diversity->count > 0)
@@ -698,7 +731,7 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     }
 
     public function getItemCount($diversion_id){
-        if($diversion_id) {
+        if(Product::cDiversity() && $diversion_id) {
             $diversion = ProductDiversity::findOne($diversion_id);
             $count = $diversion->count;
         } else {

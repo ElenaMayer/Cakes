@@ -18,7 +18,6 @@ class m200226_042458_order_payment extends Migration
         $this->addColumn('{{%order}}', 'payment_error', Schema::TYPE_STRING);
         $this->alterColumn('{{%order}}', 'payment', Schema::TYPE_STRING);
         $this->addColumn('{{%order}}', 'shipping_number', Schema::TYPE_STRING);
-        $this->addColumn('{{%order}}', 'is_ul', Schema::TYPE_BOOLEAN);
     }
 
     /**

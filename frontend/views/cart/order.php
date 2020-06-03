@@ -49,16 +49,11 @@ else
                 </div>
                 <?= $form->field($order, 'notes')->textarea(['class' => 'form-control dark', 'rows' => "3"]); ?>
 
-                <?= $form->field($order, 'is_ul')->checkbox() ?>
-
                 <div class="select_location">Доставка в <a class="link" onclick="$('#w1').modal()"><span><?=Yii::$app->cache->get('location')?></span> <i class="fa fa-angle-down"></i></a></div>
 
                 <?php echo $form->field($order, 'shipping_method')->dropDownList($shippingMethods)->label(false); ?>
 
                 <div class="shipping_methods">
-                    <div class="self" style="display: none">
-                        <?= $form->field($order, 'pickup_time')->dropDownList(Yii::$app->params['pickup_time'], ['prompt'=>'Выберите время...']); ?>
-                    </div>
                     <div class="order-address"  style="display: none">
                         <?= $form->field($order, 'address')->textInput(['placeholder' => 'Новосибирск, ул.Ленина д.1 кв.1', 'class' => 'form-control dark order-address']); ?>
                     </div>

@@ -16,7 +16,6 @@ class CatalogController extends \yii\web\Controller
     public function behaviors()
     {
         return [
-            'geoBehavior' => GeoBehavior::className(),
         ];
     }
 

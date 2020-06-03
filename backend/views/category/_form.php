@@ -13,8 +13,9 @@ use yii\widgets\ActiveForm;
 <div class="category-form">
 
     <?php $form = ActiveForm::begin(); ?>
-
-    <?= $form->field($model, 'parent_id')->dropDownList(ArrayHelper::map($categories, 'id', 'title'), ['prompt' => 'Root']) ?>
+    <?php if(Yii::$app->params['components']['product_subcategories']):?>
+        <?= $form->field($model, 'parent_id')->dropDownList(ArrayHelper::map($categories, 'id', 'title'), ['prompt' => 'Root']) ?>
+    <?php endif;?>
 
     <?= $form->field($model, 'is_active')->checkbox() ?>
 
