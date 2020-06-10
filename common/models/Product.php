@@ -131,24 +131,22 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
     }
 
     public static function cDiversity(){
-        if(Product::cDiversity())
+        if(Yii::$app->params['components']['product_diversity'])
             return true;
         else return false;
     }
 
     public static function cCounting(){
-        if(Product::cCounting())
+        if(Yii::$app->params['components']['product_counting'])
             return true;
         else return false;
     }
 
     public static function cMultiprice(){
-        if(Product::cMultiprice())
+        if(Yii::$app->params['components']['product_multiprice'])
             return true;
         else return false;
     }
-
-
 
     public function upload()
     {
@@ -464,13 +462,24 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
         }
     }
 
-    public static function getNovelties(){
+    public static function getNovelties($limit = 4){
         $noveltyProducts = Product::find()
-            ->where(['is_active' => 1, 'is_in_stock' => 1, 'is_novelty' => 1])
-            ->andWhere(['>', 'count', '0'])
-            ->limit(Yii::$app->params['productNewCount'])
-            ->all();
+            ->where(['is_active' => 1, 'is_in_stock' => 1, 'is_novelty' => 1]);
+        if(Product::cCounting()) {
+            $noveltyProducts = $noveltyProducts->andWhere(['>', 'count', '0']);
+        }
+        $noveltyProducts = $noveltyProducts->limit($limit)->all();
         return $noveltyProducts;
+    }
+
+    public static function getPopular($limit = 4){
+        $popProducts = Product::find()
+            ->where(['is_active' => 1, 'is_in_stock' => 1]);
+        if(Product::cCounting()) {
+            $popProducts = $popProducts->andWhere(['>', 'count', '0']);
+        }
+        $popProducts = $popProducts->limit($limit)->all();
+        return $popProducts;
     }
 
     public function getActiveRelations()
@@ -697,37 +706,16 @@ class Product extends \yii\db\ActiveRecord implements CartPositionInterface
         }
     }
 
-    public static function getSizesArray($categoryId = null, $type = false){
-        if($categoryId) {
-            $models = Product::find()
-                ->select(['COUNT(id) AS group_cnt', 'SUM(count) AS group_sum', 'size'])
-                ->where(['is_active' => 1, 'is_in_stock' => 1])
-                ->andWhere(['or', ['category_id' => $categoryId], ['subcategories' => $categoryId]])
-                ->groupBy('size')
-                ->all();
-            $sizes = [];
-            foreach ($models as $m)
-            {
-                if($type == 'full' || count($models) <= Yii::$app->params['sizeFilterMinCount']){
-                    $sizes[$m->size] = $m->size;
-                } else {
-                    if ($m->size && ($m->group_cnt >= Yii::$app->params['sizeFilterMinCount'] || $m->group_sum > Yii::$app->params['sizeFilterMinSum'])) {
-                        $sizes[$m->size] = $m->size;
-                    }
-                }
-            }
-            return StaticFunction::arrayMultiSort($sizes);
-        } else {
-            return [];
-        }
-    }
-
     public function getCartPosition($params = [])
     {
         return Yii::createObject([
             'class' => 'frontend\models\ProductCartPosition',
             'id' => $this->id,
         ]);
+    }
+
+    public static function getItemCountByCategory($category_id){
+        return Product::find()->where(['category_id' => $category_id])->count();
     }
 
     public function getItemCount($diversion_id){

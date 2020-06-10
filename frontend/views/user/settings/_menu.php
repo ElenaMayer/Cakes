@@ -22,10 +22,10 @@ $networksVisible = count(Yii::$app->authClientCollection->clients) > 0;
 <div class="panel panel-default">
     <div class="panel-heading">
         <h2 class="panel-title">
-            <?= Html::img($user->profile->getAvatarUrl(24), [
-                'class' => 'img-rounded',
-                'alt' => $user->username,
-            ]) ?>
+<!--            --><?//= Html::img($user->profile->getAvatarUrl(24), [
+//                'class' => 'img-rounded',
+//                'alt' => $user->username,
+//            ]) ?>
             <?= $user->username ?>
         </h2>
     </div>

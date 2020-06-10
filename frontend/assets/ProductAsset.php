@@ -11,8 +11,6 @@ class ProductAsset extends AssetBundle
         'defer' => 'defer'
     ];
     public $css = [
-        'css/prettyPhoto.min.css',
-        "css/swiper.min.css",
     ];
     public $depends = [
         'frontend\assets\AppAsset',

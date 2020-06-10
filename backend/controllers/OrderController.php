@@ -66,8 +66,9 @@ class OrderController extends Controller
         if($post = Yii::$app->request->post('OrderItem')){
             $product = Product::findOne($post['product_id']);
             $orderItem = OrderItem::find()->where(['order_id' => $id, 'product_id' => $post['product_id']]);
+
+            $div = [];
             if(Product::cDiversity()) {
-                $div = [];
                 if ($post['diversity_id']) {
                     $div = ProductDiversity::findOne($post['diversity_id']);
                     $orderItem = $orderItem->andWhere(['diversity_id' => $post['diversity_id']]);

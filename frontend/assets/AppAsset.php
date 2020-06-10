@@ -24,22 +24,46 @@ class AppAsset extends AssetBundle
     );
     public $css = [
         'css/font-awesome.min.css',
-        'css/custom.min.css',
-        'css/style.css?1',
-//        'css/colors/apple-green.css?12',
+        'vendors/linearicons/style.css',
+        'vendors/flat-icon/flaticon.css',
+        'css/bootstrap.min.css?3',
+        "vendors/revolution/css/settings.css",
+        "vendors/revolution/css/layers.css",
+        "vendors/revolution/css/navigation.css",
+        "vendors/animate-css/animate.css",
+
+        'vendors/owl-carousel/owl.carousel.min.css',
+        'vendors/magnifc-popup/magnific-popup.css',
+
+        'css/style.css?14',
+        'css/common.css?1',
+        'css/responsive.css',
+
+        "vendors/nice-select/css/nice-select.css"
     ];
     public $js = [
-        'js/off-cavnass.min.js',
-        "js/swiper.min.js",
-        'js/owl.carousel.min.js?1',
-        'js/custom.js?1',
-        'js/instafeed.min.js',
-        'js/jquery.suggestions.min.js',
+        "js/custom.js?2",
+        "js/popper.min.js",
+        "vendors/revolution/js/jquery.themepunch.tools.min.js",
+        "vendors/revolution/js/jquery.themepunch.revolution.min.js",
+        "vendors/revolution/js/extensions/revolution.extension.actions.min.js",
+        "vendors/revolution/js/extensions/revolution.extension.video.min.js",
+        "vendors/revolution/js/extensions/revolution.extension.slideanims.min.js",
+        "vendors/revolution/js/extensions/revolution.extension.layeranimation.min.js",
+        "vendors/revolution/js/extensions/revolution.extension.navigation.min.js",
 
+        "vendors/owl-carousel/owl.carousel.min.js",
+        "vendors/magnifc-popup/jquery.magnific-popup.min.js",
+        "vendors/datetime-picker/js/moment.min.js",
+        "vendors/datetime-picker/js/bootstrap-datetimepicker.min.js",
+        "vendors/nice-select/js/jquery.nice-select.min.js",
+        "vendors/jquery-ui/jquery-ui.min.js",
+        "vendors/lightbox/simpleLightbox.min.js",
+        "js/theme.js"
     ];
     public $depends = [
         'yii\web\YiiAsset',
-        'yii\bootstrap\BootstrapAsset',
+        //'yii\bootstrap\BootstrapAsset',
     ];
 
 

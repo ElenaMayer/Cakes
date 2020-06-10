@@ -14,10 +14,6 @@ class CatalogAsset extends AssetBundle
     public $css = [
     ];
     public $js = [
-        'js/price-slider.js?1',
-        'js/widget.min.js',
-        'js/mouse.min.js',
-        'js/slider.min.js',
     ];
     public $depends = [
         'frontend\assets\AppAsset',

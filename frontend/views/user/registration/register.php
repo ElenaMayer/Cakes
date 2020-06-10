@@ -21,35 +21,39 @@ use yii\widgets\ActiveForm;
 $this->title = 'Регистрация';
 $this->params['breadcrumbs'][] = $this->title;
 ?>
-<div class="row">
-    <div class="col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-1">
-        <div class="panel panel-default">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    <?= Html::encode($this->title) ?>
-                    <span>&nbsp;/&nbsp;</span>
-                    <?= Html::a(Yii::t('user', 'Войти'), ['/user/security/login']) ?>
-                </h3>
-            </div>
-            <div class="panel-body">
-                <?php $form = ActiveForm::begin([
-                    'id' => 'registration-form',
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => false,
-                ]); ?>
 
-                <?= $form->field($model, 'email') ?>
+<section class="auth-form form-reg p_100">
+    <div class="container">
+        <div class="col-md-4 col-sm-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">
+                        <?= Html::encode($this->title) ?>
+                        <span>&nbsp;/&nbsp;</span>
+                        <?= Html::a(Yii::t('user', 'Войти'), ['/user/security/login']) ?>
+                    </h3>
+                </div>
+                <div class="panel-body">
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'registration-form',
+                        'enableAjaxValidation' => true,
+                        'enableClientValidation' => false,
+                    ]); ?>
 
-                <?= $form->field($model, 'username') ?>
+                    <?= $form->field($model, 'email') ?>
 
-                <?php if ($module->enableGeneratingPassword == false): ?>
-                    <?= $form->field($model, 'password')->passwordInput() ?>
-                <?php endif ?>
+                    <?= $form->field($model, 'username') ?>
 
-                <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn btn-success btn-block']) ?>
+                    <?php if ($module->enableGeneratingPassword == false): ?>
+                        <?= $form->field($model, 'password')->passwordInput() ?>
+                    <?php endif ?>
 
-                <?php ActiveForm::end(); ?>
+                    <?= Html::submitButton(Yii::t('user', 'Sign up'), ['class' => 'btn pink_btn btn-block']) ?>
+
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+

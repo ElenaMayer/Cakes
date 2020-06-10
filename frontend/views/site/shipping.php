@@ -47,8 +47,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 <p><i class="fa fa-angle-right"></i>После отправки мы высылаем накладную с номером для отслеживания заказа.</p>
 
                 <p class="contact">По всем вопросам покупки Вы можете обратиться к нам: Анна
-                    <a href="tel:<?= Yii::$app->params['phone1'] ?>"><?= Yii::$app->params['phone1'] ?></a> и Елена
-                    <a href="tel:<?= Yii::$app->params['phone2'] ?>"><?= Yii::$app->params['phone2'] ?></a>
+                    <a href="tel:<?= Yii::$app->params['phone'] ?>"><?= Yii::$app->params['phone'] ?></a>
                 </p>
             </div>
         </div>

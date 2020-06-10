@@ -8,6 +8,5 @@ return [
     'catalogPageSize' => 12,
 //    'indexPageProductCount' => 7,
 //    'indexPageNoveltyCount' => 10,
-    'productNewCount' => 6,
     'sphinxLimit' => 100,
 ];

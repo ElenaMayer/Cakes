@@ -22,20 +22,23 @@ use common\models\ProductDiversity;
             'data'=>Product::getProductArr(false),
         ])->label(false) ?>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <?= $form->field($orderItem, 'diversity_id')->widget(DepDrop::classname(), [
-            'data'=> [],
-            'type' => DepDrop::TYPE_SELECT2,
-            'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-            'pluginOptions'=>[
-                'depends'=>['orderitem-product_id'],
-                'url' => Url::to(['/order/get_diversity']),
-                'loadingText' => 'Загрузка ...',
-                'tokenSeparators'=>[',',' '],
-                'placeholder' => 'Выберите расцветку ...',
-            ],
-        ])->label(false) ?>
-    </div>
+
+    <?php if(Product::cDiversity()):?>
+        <div class="col-md-3 col-sm-6">
+            <?= $form->field($orderItem, 'diversity_id')->widget(DepDrop::classname(), [
+                'data'=> [],
+                'type' => DepDrop::TYPE_SELECT2,
+                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
+                'pluginOptions'=>[
+                    'depends'=>['orderitem-product_id'],
+                    'url' => Url::to(['/order/get_diversity']),
+                    'loadingText' => 'Загрузка ...',
+                    'tokenSeparators'=>[',',' '],
+                    'placeholder' => 'Выберите расцветку ...',
+                ],
+            ])->label(false) ?>
+        </div>
+    <?php endif;?>
 
     <div class="col-md-1 col-sm-6">
         <?= $form->field($orderItem, 'quantity')->textInput(['step' => 1, 'min' => 1, 'value' => 1])->label(false) ?>

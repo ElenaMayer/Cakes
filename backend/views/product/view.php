@@ -4,6 +4,7 @@ use yii\helpers\Html;
 use yii\widgets\DetailView;
 use yii\helpers\Url;
 use common\models\Category;
+use common\models\Product;
 
 /* @var $this yii\web\View */
 /* @var $model common\models\Product */

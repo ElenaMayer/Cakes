@@ -4,6 +4,7 @@ namespace frontend\controllers;
 
 use common\models\Category;
 use common\models\Product;
+use common\models\Recipe;
 use common\models\ProductDiversity;
 use yii\data\ActiveDataProvider;
 use yii\helpers\Url;
@@ -31,8 +32,9 @@ class CatalogController extends \yii\web\Controller
 
     public function actionList($categorySlug = null)
     {
+
         if ($categorySlug == null) {
-            $this->redirect('catalog/boxes');
+            $this->redirect('catalog/cakes');
         }
         $get = Yii::$app->request->get();
         if (!empty($get) && isset($get['urlParams'])){
@@ -44,20 +46,20 @@ class CatalogController extends \yii\web\Controller
 
         $categories = Category::find()->where(['is_active' => 1])->indexBy('id')->orderBy('id')->all();
 
-        $productsQuery = Product::find()->where(['is_active' => 1]);
+        $recipesQuery = Recipe::find()->where(['is_active' => 1]);
 
-        $this->prepareFilter($productsQuery);
+        $this->prepareFilter($recipesQuery);
 
         $category = Category::find()->where(['slug' => $categorySlug])->one();
         if ($category) {
             if(!$category->parent)
-                $productsQuery->andWhere(['category_id' => $this->getCategoryIds($categories, $category->id)]);
+                $recipesQuery->andWhere(['category_id' => $this->getCategoryIds($categories, $category->id)]);
             else {
-                $productsQuery->andWhere(['REGEXP', 'subcategories','^'.$category->id.'$|^'.$category->id.',.+|^.+,'.$category->id.'$|^.+,'.$category->id.',']);
+                $recipesQuery->andWhere(['REGEXP', 'subcategories','^'.$category->id.'$|^'.$category->id.',.+|^.+,'.$category->id.'$|^.+,'.$category->id.',']);
             }
         }
-        $productsDataProvider = new ActiveDataProvider([
-            'query' => $productsQuery,
+        $recipesDataProvider = new ActiveDataProvider([
+            'query' => $recipesQuery,
             'pagination' => [
                 'pageSize' => isset($get['limit'])? $get['limit']: Yii::$app->params['catalogPageSize'],
             ],
@@ -65,52 +67,141 @@ class CatalogController extends \yii\web\Controller
         return $this->render('list', [
             'category' => isset($category)? $category : null,
             'menuItems' => Category::getMenuItems(isset($category->id) ? $category->id : 'all'),
-            'models' => $productsDataProvider->getModels(),
-            'pagination' => $productsDataProvider->getPagination(),
-            'pageCount' => $productsDataProvider->getCount(),
-            'noveltyProducts' => Product::getNovelties(),
+            'models' => $recipesDataProvider->getModels(),
+            'pagination' => $recipesDataProvider->getPagination(),
+            'pageCount' => $recipesDataProvider->getCount(),
         ]);
     }
 
     private function prepareFilter(&$query){
         if($get = Yii::$app->request->get()){
-            if(isset($get['color']) && $get['color'] != 'all'){
-                $query->andFilterWhere(['like', 'color', $get['color']]);
-            }
-            if(isset($get['size']) && $get['size'] != 'all'){
-                if(strripos($get['size'], ';') === false) {
-                    $query->andFilterWhere(['size' => $get['size']]);
-                } else {
-                    $sizes = array_diff(explode(';', $get['size']), array(''));
-                    $query->andWhere(['in','size', $sizes]);
-                }
-            }
-            if(isset($get['tag']) && $get['tag'] != 'all'){
-                $query->andFilterWhere(['like', 'tags', $get['tag']]);
-            }
+
             if(isset($get['min_price']) && isset($get['max_price'])){
                 $query->andWhere(['between', 'price', $get['min_price'], $get['max_price']]);
             }
             if(isset($get['order'])){
-                if ($get['order'] == 'novelty') {
-                    $query->orderBy('is_in_stock DESC, is_novelty');
-                } elseif ($get['order'] == 'article'){
-                    $query->orderBy('article ASC');
-                } elseif ($get['order'] == 'price_lh'){
+                if ($get['order'] == 'price_lh'){
                     $query->select(['*', '(CASE WHEN new_price > 0 THEN new_price ELSE price END) as price_common']);
                     $query->orderBy('price_common ASC');
                 } elseif ($get['order'] == 'price_hl'){
                     $query->select(['*', '(CASE WHEN new_price > 0 THEN new_price ELSE price END) as price_common']);
                     $query->orderBy('price_common DESC');
                 } else {
-                    $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+                    $query->orderBy('id DESC');
                 }
             } else {
-                $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+                $query->orderBy('id DESC');
             }
         } else {
-            $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+            $query->orderBy('id DESC');
         }
+    }
+
+//    public function actionList($categorySlug = null)
+//    {
+//
+//        if ($categorySlug == null) {
+//            $this->redirect('catalog/cakes');
+//        }
+//        $get = Yii::$app->request->get();
+//        if (!empty($get) && isset($get['urlParams'])){
+//            $this->redirect($get['urlParams']);
+//        }
+//
+//        /** @var Category $category */
+//        $category = null;
+//
+//        $categories = Category::find()->where(['is_active' => 1])->indexBy('id')->orderBy('id')->all();
+//
+//        $productsQuery = Product::find()->where(['is_active' => 1]);
+//
+//        $this->prepareFilter($productsQuery);
+//
+//        $category = Category::find()->where(['slug' => $categorySlug])->one();
+//        if ($category) {
+//            if(!$category->parent)
+//                $productsQuery->andWhere(['category_id' => $this->getCategoryIds($categories, $category->id)]);
+//            else {
+//                $productsQuery->andWhere(['REGEXP', 'subcategories','^'.$category->id.'$|^'.$category->id.',.+|^.+,'.$category->id.'$|^.+,'.$category->id.',']);
+//            }
+//        }
+//        $productsDataProvider = new ActiveDataProvider([
+//            'query' => $productsQuery,
+//            'pagination' => [
+//                'pageSize' => isset($get['limit'])? $get['limit']: Yii::$app->params['catalogPageSize'],
+//            ],
+//        ]);
+//        return $this->render('list', [
+//            'category' => isset($category)? $category : null,
+//            'menuItems' => Category::getMenuItems(isset($category->id) ? $category->id : 'all'),
+//            'models' => $productsDataProvider->getModels(),
+//            'pagination' => $productsDataProvider->getPagination(),
+//            'pageCount' => $productsDataProvider->getCount(),
+//        ]);
+//    }
+
+//    private function prepareFilter(&$query){
+//        if($get = Yii::$app->request->get()){
+//            if(isset($get['color']) && $get['color'] != 'all'){
+//                $query->andFilterWhere(['like', 'color', $get['color']]);
+//            }
+//            if(isset($get['size']) && $get['size'] != 'all'){
+//                if(strripos($get['size'], ';') === false) {
+//                    $query->andFilterWhere(['size' => $get['size']]);
+//                } else {
+//                    $sizes = array_diff(explode(';', $get['size']), array(''));
+//                    $query->andWhere(['in','size', $sizes]);
+//                }
+//            }
+//            if(isset($get['tag']) && $get['tag'] != 'all'){
+//                $query->andFilterWhere(['like', 'tags', $get['tag']]);
+//            }
+//            if(isset($get['min_price']) && isset($get['max_price'])){
+//                $query->andWhere(['between', 'price', $get['min_price'], $get['max_price']]);
+//            }
+//            if(isset($get['order'])){
+//                if ($get['order'] == 'novelty') {
+//                    $query->orderBy('is_in_stock DESC, is_novelty');
+//                } elseif ($get['order'] == 'article'){
+//                    $query->orderBy('article ASC');
+//                } elseif ($get['order'] == 'price_lh'){
+//                    $query->select(['*', '(CASE WHEN new_price > 0 THEN new_price ELSE price END) as price_common']);
+//                    $query->orderBy('price_common ASC');
+//                } elseif ($get['order'] == 'price_hl'){
+//                    $query->select(['*', '(CASE WHEN new_price > 0 THEN new_price ELSE price END) as price_common']);
+//                    $query->orderBy('price_common DESC');
+//                } else {
+//                    $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+//                }
+//            } else {
+//                $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+//            }
+//        } else {
+//            $query->orderBy('is_in_stock DESC, sort DESC, id DESC');
+//        }
+//    }
+
+    public function actionRecipe($categorySlug, $recipeId)
+    {
+        $recipe = Recipe::findOne($recipeId);
+
+        $category = Category::find()->where(['slug' => $categorySlug])->one();
+
+        if(isset($_GET['ajax']) && $_GET['ajax'] == 1){
+            return $this->renderPartial('_recipe_data', [
+                'category' => $category,
+                'recipe' => $recipe,
+            ]);
+        }
+        if(!$recipe || !$recipe->is_active){
+            return $this->redirect('/catalog/list');
+        }
+
+        return $this->render('recipe', [
+            'category' => $category,
+            'recipe' => $recipe,
+            'menuItems' => Category::getMenuItems(null)
+        ]);
     }
 
     public function actionProduct($categorySlug, $productId, $diversityId=null)
@@ -150,42 +241,6 @@ class CatalogController extends \yii\web\Controller
             'menuItems' => Category::getMenuItems(null)
         ]);
     }
-
-//    public function actionSale()
-//    {
-//        $get = Yii::$app->request->get();
-//        if (!empty($get) && isset($get['urlParams'])){
-//            $this->redirect($get['urlParams']);
-//        }
-//
-//        $productsQuery = Product::find()
-//            ->where(['is_active' => 1, 'is_in_stock' => 1])
-//            ->andWhere(['>', 'new_price', 0])
-//            ->andWhere(['>', 'count', 0]);
-//
-//        $this->prepareFilter($productsQuery);
-//
-//        $productsDataProvider = new ActiveDataProvider([
-//            'query' => $productsQuery,
-//            'pagination' => [
-//                'pageSize' => isset($get['limit'])? $get['limit']: Yii::$app->params['catalogPageSize'],
-//            ],
-//        ]);
-//
-//        $maxSale = Product::find()
-//            ->where(['is_active' => 1, 'is_in_stock' => 1])
-//            ->andWhere(['>', 'new_price', 0])
-//            ->andWhere(['>', 'count', 0])
-//            ->max('(price - new_price) * 100 / price');
-//
-//        return $this->render('sale', [
-//            'maxSale' => round($maxSale),
-//            'models' => $productsDataProvider->getModels(),
-//            'pagination' => $productsDataProvider->getPagination(),
-//            'pageCount' => $productsDataProvider->getCount(),
-//            'noveltyProducts' => Product::getNovelties(),
-//        ]);
-//    }
 
     /**
      * Returns IDs of category and all its sub-categories

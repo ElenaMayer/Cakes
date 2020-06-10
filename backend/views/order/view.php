@@ -93,9 +93,6 @@ $this->params['breadcrumbs'][] = $this->title;
                         if($model->shipping_method == 'rp'){
                             $href = 'https://www.pochta.ru/tracking#'.$model->shipping_number;
                         }
-//                        elseif($model->shipping_method == 'tk' && $model->tk == 'sdek'){
-//                            $href = 'https://www.pochta.ru/tracking#'.$model->shipping_number;
-//                        }
                         return '<a href=' . $href . " target='_blank'>" . $model->shipping_number . '</a>';
                     } else {
                         $model->shipping_method;

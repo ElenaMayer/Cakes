@@ -1,5 +1,5 @@
 <?php
-//Yii::$app->params['components']['product_copy'];
+//Yii::$app->params['components']['product_diversity'];
 return [
     'components' => [
         'product_counting' => 0,
@@ -14,10 +14,10 @@ return [
 
     'user.passwordResetTokenExpire' => 3600,
 
-    'productOriginalImageWidth'=> 405,
-    'productOriginalImageHeight'=> 405,
-    'productMediumImageWidth'=> 260,
-    'productMediumImageHeight'=> 260,
-    'productSmallImageWidth'=> 100,
-    'productSmallImageHeight'=> 100,
+    'productOriginalImageWidth'=> 550,
+    'productOriginalImageHeight'=> 550,
+    'productMediumImageWidth'=> 270,
+    'productMediumImageHeight'=> 270,
+    'productSmallImageWidth'=> 110,
+    'productSmallImageHeight'=> 110,
 ];
