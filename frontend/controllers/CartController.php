@@ -5,12 +5,12 @@ namespace frontend\controllers;
 use common\models\Order;
 use common\models\OrderItem;
 use common\models\Product;
-use common\models\ProductDiversity;
 use common\models\User;
 use Yii;
 use yii\filters\AccessControl;
 use yii\helpers\Json;
-use frontend\components\GeoBehavior;
+use yii\data\ActiveDataProvider;
+
 
 class CartController extends \yii\web\Controller
 {
@@ -124,37 +124,27 @@ class CartController extends \yii\web\Controller
 
     public function actionOrder()
     {
+
         $order = new Order();
         /* @var $cart ShoppingCart */
         $cart = \Yii::$app->cart;
 
-        $total = $cart->getCost();
-        if($total < Yii::$app->params['orderMinSum']){
-            $this->redirect(['cart']);
-        }
-
         $positions = $cart->getPositions();
         if($positions) {
             if ($order->load(\Yii::$app->request->post()) && $order->validate()) {
-                if($total < Yii::$app->params['orderMinSum']){
-                    $this->redirect(['cart']);
-                } elseif ($redirectUrl = $this->processOrder($order, $cart, $positions)){
-                    return $this->redirect($redirectUrl);
-                }
+                $redirectUrl = $this->processOrder($order, $cart, $positions);
+                return $this->redirect($redirectUrl);
             }
             $get = Yii::$app->request->get();
             if($get) {
                 $order->fio = isset($get['fio'])?$get['fio']:'';
-                $order->address = isset($get['address'])?$get['address']:'';
                 $order->phone = isset($get['phone'])?$get['phone']:'';
                 $order->email = isset($get['email'])?$get['email']:'';
             } elseif(!Yii::$app->user->isGuest) {
                 $order->fio = Yii::$app->user->getIdentity()->fio;
-                $order->address = Yii::$app->user->getIdentity()->address;
                 $order->phone = Yii::$app->user->getIdentity()->phone;
                 $order->email = Yii::$app->user->getIdentity()->email;
             }
-            $order->payment_method = 'online';
             return $this->render('order', [
                 'order' => $order,
                 'positions' => $positions,
@@ -169,50 +159,27 @@ class CartController extends \yii\web\Controller
         $transaction = $order->getDb()->beginTransaction();
         if (!Yii::$app->user->isGuest) {
             $order->user_id = Yii::$app->user->id;
-            //$order->discount = $cart->getDiscountPercent();
 
             $user = User::findOne(Yii::$app->user->id);
             if(!$user->fio) $user->fio = $order->fio;
-            if(!$user->address) $user->address = $order->address;
             if(!$user->phone) $user->phone = $order->phone;
             $user->save(false);
         }
 
-        $order->shipping_cost = Order::getShippingCost($order->shipping_method);
-        if($location = Yii::$app->cache->get('location')) {
-            if($order->city)
-                $order->city = $location . ', ' . $order->city;
-            else
-                $order->city = $location;
-        }
-
         $order->save(false);
-        Yii::debug('Заказ #' . $order->id . ' создан ->', 'order');
 
         foreach ($positions as $position) {
             $product = $position->getProduct();
-            if ($product->getIsActive() && $product->getIsInStock()) {
+            if ($product->getIsActive()) {
                 $qty = $position->getQuantity();
                 $orderItem = new OrderItem();
                 $orderItem->order_id = $order->id;
                 $orderItem->title = $product->title;
-                if(Product::cDiversity() && $position->diversity_id){
-                    $orderItem->diversity_id = $position->diversity_id;
-                    $diversity = ProductDiversity::findOne($position->diversity_id);
-                    $orderItem->title .= ' "' . $diversity->title . '"';
-                    if($product->getItemCount($position->diversity_id) < $qty)
-                        $qty = $product->getItemCount($position->diversity_id);
-                }
+
                 $orderItem->price = $product->getPrice($qty);
                 $orderItem->product_id = $product->id;
                 $orderItem->quantity = $qty;
                 $orderItem->save(false);
-                if(!$orderItem->diversity_id){
-                    Yii::debug( 'Арт.' . $orderItem->product->article . ' ' . $orderItem->product->count . ' -> ' . ($orderItem->product->count-$orderItem->quantity) . 'шт', 'order');
-                } else {
-                    Yii::debug('Расцветка Арт.' . $orderItem->diversity->article . ' ' . $orderItem->diversity->count . ' -> ' . ($orderItem->diversity->count-$orderItem->quantity) . 'шт', 'order');
-                }
-                $product->minusCount($orderItem->quantity, $position->diversity_id);
             }
         }
         $transaction->commit();
@@ -220,11 +187,8 @@ class CartController extends \yii\web\Controller
         Yii::$app->cart->removeAll();
 
         $order->sendOrderEmail();
-        if($order->payment_method == 'online'){
-            return $order->payment();
-        } else {
-            return "/cart/complete?id=$order->id";
-        }
+
+        return "/cart/complete?id=$order->id";
     }
 
     public function actionComplete($id){
@@ -245,10 +209,22 @@ class CartController extends \yii\web\Controller
     }
 
     public function actionHistory(){
-        $history = Order::find()->where(['user_id' => Yii::$app->user->id])->orderBy('id DESC')->all();
-        return $this->render('history', [
-            'history' => $history,
+
+
+        $historyQuery = Order::find()->where(['user_id' => Yii::$app->user->id]);
+
+        $recipesDataProvider = new ActiveDataProvider([
+            'query' => $historyQuery,
+            'pagination' => [
+                'pageSize' => Yii::$app->params['catalogPageSize'],
+            ],
         ]);
+        return $this->render('history', [
+            'models' => $recipesDataProvider->getModels(),
+            'pagination' => $recipesDataProvider->getPagination(),
+            'pageCount' => $recipesDataProvider->getCount(),
+        ]);
+
     }
 
     public function actionHistory_item($orderId){

@@ -115,7 +115,7 @@ class Category extends \yii\db\ActiveRecord
             if ($category->parent_id === $parent) {
                 $menuItems[$category->id] = [
                     'active' => $activeId === $category->id,
-                    'label' => $category->title . ' (' . Product::getItemCountByCategory($category->id) . ')',
+                    'label' => $category->title . ' (' . Recipe::getItemCountByCategory($category->id) . ')',
                     'url' => ['/catalog/'.$category->slug],
                 ];
                 if($activeId === $category->id || (isset($activeParentId) && $activeParentId === $category->id))

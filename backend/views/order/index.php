@@ -42,9 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     if($model->user_id){
                         $href = '/order/index?OrderSearch%5Buser_id%5D='.$model->user_id;
                         return '<a href=' . $href . '>' . $model->fio . '</a>';
-                    } elseif (Order::isSameFioExist($model->fio)){
-                        $href = '/order/index?OrderSearch%5Bfio%5D='.$model->fio;
-                        return '<a href=' . $href . '>' . $model->fio . '</a>';
                     } else {
                         return $model->fio;
                     }
@@ -57,26 +54,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return isset($model->getStatuses()[$model->status]) ? $model->getStatuses()[$model->status] : $model->status;
                 },
                 'filter' => Order::getStatuses()
-            ],
-            [
-                'attribute'=>'shipping_method',
-                'value' => function ($model) {
-                    if ($model->shipping_method == 'self') {
-                        if($model->notes)
-                            return "Самовывоз ($model->notes)";
-                        else
-                            return 'Самовывоз';
-                    } else {
-                        $result = isset(Order::getShippingMethodsLite()[$model->shipping_method])? Order::getShippingMethodsLite()[$model->shipping_method] : $model->shipping_method;
-                        if($model->city) {
-                            $result .= ' (' . $model->city . ')';
-                        }
-                        if($model->notes)
-                            $result .= ' (' . $model->notes . ')';
-                        return $result;
-                    };
-                },
-                'filter' => Order::getShippingMethodsLite()
             ],
             [
                 'header'=>'Сумма',

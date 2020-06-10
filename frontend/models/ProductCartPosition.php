@@ -2,9 +2,9 @@
 
 namespace frontend\models;
 
+use common\models\Recipe;
 use yz\shoppingcart\CartPositionInterface;
 use yz\shoppingcart\CostCalculationEvent;
-use common\models\Product;
 
 
 class ProductCartPosition implements CartPositionInterface
@@ -17,25 +17,19 @@ class ProductCartPosition implements CartPositionInterface
 
     public $id;
     public $price;
-    public $diversity_id;
 
     public function getId()
     {
-        return md5(serialize([$this->id, $this->diversity_id]));
+        return md5(serialize([$this->id]));
     }
 
-    public function getPrice($qty = 0)
+    public function getPrice($qty = 1)
     {
         $product = $this->getProduct();
-        if(!$product->getIsInStock($this->diversity_id) || !$product->getIsActive($this->diversity_id))
+        if(!$product->getIsActive())
             return 0;
         else
-            return $product->getPrice($qty, $this->diversity_id);
-    }
-
-    public function getDiversity()
-    {
-        return $this->getProduct()->diversity_id;
+            return $product->getPrice($qty);
     }
 
     /**
@@ -44,24 +38,14 @@ class ProductCartPosition implements CartPositionInterface
     public function getProduct()
     {
         if ($this->_product === null) {
-            $this->_product = Product::findOne($this->id);
+            $this->_product = Recipe::findOne($this->id);
         }
         return $this->_product;
     }
 
     public function getQuantity()
     {
-        return $this->_quantity;
-    }
-
-    public function getActiveQuantity()
-    {
-        $product = $this->getProduct();
-        if($product->getIsInStock()){
-            return $this->_quantity;
-        } else {
-            return 0;
-        }
+        return 1;
     }
 
     public function setQuantity($quantity)
@@ -78,6 +62,7 @@ class ProductCartPosition implements CartPositionInterface
     {
         /** @var Component|CartPositionInterface|self $this */
         $cost = $this->getQuantity() * $this->getPrice($this->getQuantity());
+        $cost = $this->getPrice();
         $costEvent = new CostCalculationEvent([
             'baseCost' => $cost,
         ]);

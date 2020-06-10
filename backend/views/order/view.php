@@ -42,64 +42,6 @@ $this->params['breadcrumbs'][] = $this->title;
             'fio',
             'phone',
             'email:email',
-            [
-                'attribute' => 'shipping_method',
-                'value' => function ($model) {
-                    return Order::getShippingMethodsLite()[$model->shipping_method];
-                },
-            ],
-            'city',
-            [
-                'attribute' => 'address',
-                'value' => function ($model) {
-                    return $model->address;
-                },
-            ],
-            [
-                'attribute' => 'payment_method',
-                'value' => function ($model) {
-                    return Order::getPaymentMethods()[$model->payment_method];
-                },
-            ],
-            [
-                'attribute'=>'payment',
-                'value' => function ($model) {
-                    if($model->payment) {
-                        $payment = Order::getPaymentTypes()[$model->payment];
-                        if ($model->payment == 'canceled' && $model->payment_error) {
-                            $payment .= ' (' . Payment::getErrorDesc($model->payment_error) . ')';
-                        }
-                        return $payment;
-                    } else {
-                        return 'Нет';
-                    }
-                },
-            ],
-            [
-                'attribute' => 'payment_url',
-                'format' => 'html',
-                'value' => function ($model) {
-                    if($model->payment_method == 'online' && $model->payment != 'succeeded')
-                        return '<a class="get_payment_url" href="#">Получить ссылку</a>';
-                    else
-                        return '';
-                },
-            ],
-            [
-                'attribute' => 'shipping_number',
-                'format' => 'html',
-                'value' => function ($model) {
-                    if($model->shipping_number){
-                        if($model->shipping_method == 'rp'){
-                            $href = 'https://www.pochta.ru/tracking#'.$model->shipping_number;
-                        }
-                        return '<a href=' . $href . " target='_blank'>" . $model->shipping_number . '</a>';
-                    } else {
-                        $model->shipping_method;
-                    }
-                },
-            ],
-            'notes:ntext',
             'created_at:date',
             'updated_at:date',
         ],

@@ -62,7 +62,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['']];
                                         <?= Html::encode($product->title)?>
                                     </a>
                                 </td>
-                                <td><?= (int)$product->price ?><i class="fa fa-ruble"></i></td>
+                                <td><?= $product->price ?><i class="fa fa-ruble"></i></td>
                                 <td class="product-remove"><a data-id="<?= $position->getId() ?>" id="remove_cart_item" class="remove">X</a></td>
                             </tr>
                         <?php endif;?>
@@ -100,9 +100,7 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['']];
                                 Ваша корзина в данный момент пуста.
                             </p>
                             <p class="return-to-shop">
-                                <a class="button wc-backward" href="/catalog">
-                                    Вернуться к покупкам
-                                </a>
+                                <a class="pest_btn" href="/catalog">Вернуться к покупкам</a>
                             </p>
                         </div>
                     </div>

@@ -34,14 +34,7 @@ use yii\behaviors\TimestampBehavior;
 class Order extends \yii\db\ActiveRecord
 {
     const STATUS_NEW = 'x_new';
-    const STATUS_COLLECTED = 'was_collected';
-    const STATUS_PACKED = 'was_collect';
-    const STATUS_SHIPPED = 'in_shipping';
     const STATUS_DONE = 'done';
-    const STATUS_CANCELED = 'canceled';
-    const STATUS_PAYMENT = 'payment';
-    const STATUS_PRE_ORDER = 'is_pre_order';
-    const STATUS_PAID = 'was_paid';
 
     public function behaviors()
     {
@@ -115,43 +108,6 @@ class Order extends \yii\db\ActiveRecord
         if (parent::beforeSave($insert)) {
             if ($insert) {
                 $this->status = self::STATUS_NEW;
-            } else {
-                $oldAttributes = $this->getOldAttributes();
-                if($this->status != $oldAttributes['status']) {
-                    if($this->status != $oldAttributes['status']) {
-                        if($this->status == self::STATUS_CANCELED) {
-
-                            Yii::debug('Отменен заказ #' . $this->id . ' ->', 'order');
-
-                            foreach ($this->orderItems as $item){
-
-                                if(Product::cDiversity() && $item->diversity_id){
-                                    Yii::debug('Расцветка Арт.' . $item->diversity->article . ' ' . $item->diversity->count . ' -> ' . ($item->diversity->count+$item->quantity) . 'шт', 'order');
-                                } else {
-                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count+$item->quantity) . 'шт', 'order');
-                                }
-                                if(Product::cCounting()){
-                                    $item->product->changeCount('plus', $item->quantity, $item->diversity_id);
-                                }
-                            }
-                        } elseif($oldAttributes['status'] == self::STATUS_CANCELED){
-
-                            Yii::debug('Открыт отмененный заказ #' . $this->id . ' ->', 'order');
-
-                            foreach ($this->orderItems as $item){
-
-                                if(Product::cDiversity() && $item->diversity_id){
-                                    Yii::debug('Расцветка Арт.' . $item->diversity->article . ' ' . $item->diversity->count . ' -> ' . ($item->diversity->count-$item->quantity) . 'шт', 'order');
-                                } else {
-                                    Yii::debug( 'Арт.' . $item->product->article . ' ' . $item->product->count . ' -> ' . ($item->product->count-$item->quantity) . 'шт', 'order');
-                                }
-                                if(Product::cCounting()) {
-                                    $item->product->changeCount('minus', $item->quantity, $item->diversity_id);
-                                }
-                            }
-                        }
-                    }
-                }
             }
             return true;
         } else {
@@ -163,14 +119,7 @@ class Order extends \yii\db\ActiveRecord
     {
         return [
             self::STATUS_NEW => 'Новый',
-            self::STATUS_PAID => 'Оплачено',
-            self::STATUS_COLLECTED => 'Собран',
-            self::STATUS_PACKED => 'Упакован',
-            self::STATUS_PAYMENT => 'Платеж отменен',
-            self::STATUS_SHIPPED => 'Передан в доставку',
-            self::STATUS_PRE_ORDER => 'Предзаказ',
-            self::STATUS_DONE => 'Выполнен',
-            self::STATUS_CANCELED => 'Отменен',
+            self::STATUS_DONE => 'Оплачено',
         ];
     }
 
@@ -217,9 +166,6 @@ class Order extends \yii\db\ActiveRecord
     public static function getPaymentMethods()
     {
         return [
-            'account' => 'Оплата по счету',
-            //'cash' => 'Наличными при получении',
-            'online' => 'Банковской картой онлайн (комиссия 0%)',
             'card' => 'Переводом на карту',
         ];
     }

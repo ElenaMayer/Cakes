@@ -21,26 +21,6 @@ use \common\models\Order;
 
     <?= $form->field($model, 'email')->textInput(['maxlength' => 255]) ?>
 
-    <?= $form->field($model, 'shipping_method')->dropDownList(Order::getShippingMethodsLite()) ?>
-
-    <div class="shipping_method_field address_field" <?php if($model->shipping_method != 'rp' && $model->shipping_method != 'shipping'):?>style="display: none"<?php endif;?>">
-        <?= $form->field($model, 'address')->textInput(['maxlength' => 255]) ?>
-    </div>
-
-    <div class="shipping_method_field city_field" <?php if($model->shipping_method != 'tk'):?>style="display: none"<?php endif;?>">
-        <?= $form->field($model, 'city')->textInput(['maxlength' => 255]) ?>
-    </div>
-
-    <?= $form->field($model, 'shipping_cost')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'payment_method')->dropDownList(Order::getPaymentMethods()) ?>
-
-    <?= $form->field($model, 'discount')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'shipping_number')->textInput(['maxlength' => 255]) ?>
-
-    <?= $form->field($model, 'notes')->textarea(['rows' => 6]) ?>
-
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
     </div>

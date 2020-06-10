@@ -51,7 +51,6 @@ $this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['']];
                             <h4>Сортировать по :</h4>
                             <select name="orderby" class="short" id="p_sort_by" onchange="this.options[this.selectedIndex].value && (window.location = this.options[this.selectedIndex].value);">
                                 <option value="<?= StaticFunction::addGetParamToCurrentUrl('order', 'popular') ?>" <?php if(!Yii::$app->request->get('order') || Yii::$app->request->get('order') == 'popular'):?>data-display="популярности"<?php endif;?>>популярности</option>
-                                <option value="<?= StaticFunction::addGetParamToCurrentUrl('order', 'article') ?>" <?php if(Yii::$app->request->get('order') && Yii::$app->request->get('order') == 'article'):?>data-display="артикулу"<?php endif;?>>артикулу</option>
                                 <option value="<?= StaticFunction::addGetParamToCurrentUrl('order', 'price_lh') ?>" <?php if(Yii::$app->request->get('order') && Yii::$app->request->get('order') == 'price_lh'):?>data-display="возрастанию цены"<?php endif;?>>возрастанию цены</option>
                                 <option value="<?= StaticFunction::addGetParamToCurrentUrl('order', 'price_hl') ?>" <?php if(Yii::$app->request->get('order') && Yii::$app->request->get('order') == 'price_hl'):?>data-display="убыванию цены"<?php endif;?>>убыванию цены</option>
                             </select>

@@ -35,14 +35,14 @@ class AppAsset extends AssetBundle
         'vendors/owl-carousel/owl.carousel.min.css',
         'vendors/magnifc-popup/magnific-popup.css',
 
-        'css/style.css?14',
-        'css/common.css?1',
+        'css/style.css?16',
+        'css/common.css?2',
         'css/responsive.css',
 
         "vendors/nice-select/css/nice-select.css"
     ];
     public $js = [
-        "js/custom.js?2",
+        "js/custom.js?3",
         "js/popper.min.js",
         "vendors/revolution/js/jquery.themepunch.tools.min.js",
         "vendors/revolution/js/jquery.themepunch.revolution.min.js",

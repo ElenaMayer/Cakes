@@ -130,29 +130,22 @@ class Recipe extends \yii\db\ActiveRecord implements CartPositionInterface
     /**
      * @inheritdoc
      */
-    public function getPrice($qty = 0, $orderCreated = false, $diversityId = null)
+    public function getPrice($qty = 0, $orderCreated = false)
     {
-        if (($this->getIsActive() && $this->getIsInStock()) || $orderCreated) {
-            if ($this->multiprice)
-                return $this->getMultiprice($qty);
-            elseif ($this->getNewPrice())
-                return $this->getNewPrice();
-            else
+        if ($this->getIsActive() || $orderCreated) {
+//            if ($this->getNewPrice())
+//                return $this->getNewPrice();
+//            else
                 return $this->price;
         } else {
             return 0;
         }
     }
 
-    public function getIsActive($diversityId = null)
+    public function getIsActive()
     {
-        $product = Product::findOne($this->id);
-        if (Product::cDiversity() && $product->diversity && $diversityId) {
-            $diversity = ProductDiversity::findOne($diversityId);
-            return $diversity->is_active;
-        } else {
-            return $product->is_active;
-        }
+        $product = Recipe::findOne($this->id);
+        return $product->is_active;
     }
 
     /**
@@ -165,11 +158,8 @@ class Recipe extends \yii\db\ActiveRecord implements CartPositionInterface
 
     public static function getPopular($limit = 4)
     {
-        $popProducts = Product::find()
-            ->where(['is_active' => 1, 'is_in_stock' => 1]);
-        if (Product::cCounting()) {
-            $popProducts = $popProducts->andWhere(['>', 'count', '0']);
-        }
+        $popProducts = Recipe::find()
+            ->where(['is_active' => 1]);
         $popProducts = $popProducts->limit($limit)->all();
         return $popProducts;
     }
@@ -199,23 +189,8 @@ class Recipe extends \yii\db\ActiveRecord implements CartPositionInterface
 
     public static function getItemCountByCategory($category_id)
     {
-        return Product::find()->where(['category_id' => $category_id])->count();
+        return Recipe::find()->where(['category_id' => $category_id])->count();
     }
-
-//    public function saveIngredients($ingredients){
-//        if($this->ingredients){
-//            foreach ($this->ingredients as $ingredientOld){
-//                $ingredientOld->delete();
-//            }
-//        }
-//        foreach ($ingredients as $ingredient){
-//            $ingredient = new RecipeIngredient();
-//            $ingredient->recipe_id = $this->id;
-//            $ingredient->title = $ingredient['title'];
-//            $ingredient->count = $ingredient['count'];
-//            $ingredient->save();
-//        }
-//    }
 
     public function getRecipeIngredients()
     {
@@ -275,5 +250,40 @@ class Recipe extends \yii\db\ActiveRecord implements CartPositionInterface
             $ingredient->delete();
         }
         return true;
+    }
+
+    public function hasInCart(){
+        $cart = \Yii::$app->cart;
+        $positions =  $cart->getPositions();
+        foreach ($positions as $position){
+            if($position->id == $this->id)
+                return true;
+        }
+        return false;
+    }
+
+    public function isAvailable(){
+        if($this->price > 0) {
+            if(Yii::$app->user->isGuest){
+                return false;
+            } else {
+                $orders = Order::find()->where(['user_id' => Yii::$app->user->id])->all();
+                if($orders) {
+                    foreach ($orders as $order){
+                        foreach ($order->orderItems as $item){
+                            if($item->product_id == $this->id){
+                                if($order->status == Order::STATUS_DONE)
+                                    return true;
+                                else
+                                    return 'payment';
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        } else {
+            return true;
+        }
     }
 }

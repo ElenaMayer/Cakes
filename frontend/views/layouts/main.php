@@ -80,7 +80,6 @@ IeAsset::register($this);
                     </button>
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav mr-auto">
-                            <li <?= $this->context->action->id == 'index' ? "class='active'" : "";?>><a href="/">Главная</a></li>
                             <?php $categories = Category::find()->where(['is_active' => 1, 'parent_id' => null])->all(); ?>
                             <?php $activeCategory = array_shift($this->context->actionParams) ?>
                             <?php foreach ($categories as $category):?>
@@ -92,8 +91,7 @@ IeAsset::register($this);
                         <ul class="navbar-nav justify-content-end">
                             <li <?= $this->context->action->id == 'about' ? "class='active'" : "";?>><a href="/about">О нас</a></li>
                             <li <?= $this->context->action->id == 'contact' ? "class='active'" : "";?>><a href="/contact">Контакты</a></li>
-                            <li <?= $this->context->action->id == 'shipping' ? "class='active'" : "";?>><a href="/shipping">Доставка</a></li>
-                            <li <?= $this->context->action->id == 'payment' ? "class='active'" : "";?>><a href="/payment">Оплата</a></li>
+                            <li <?= $this->context->action->id == 'payment' ? "class='active'" : "";?>><a href="/payment">Как сделать заказ</a></li>
                         </ul>
                     </div>
                 </nav>

@@ -1,7 +1,6 @@
 <?php
 use yii\widgets\Menu;
-use common\models\StaticFunction;
-use \common\models\Product;
+use \common\models\Recipe;
 use yii\helpers\Html;
 ?>
 
@@ -21,13 +20,13 @@ use yii\helpers\Html;
         <div class="p_w_title">
             <h3>Популярное</h3>
         </div>
-        <?php foreach (array_values(Product::getPopular()) as $model) :?>
+        <?php foreach (array_values(Recipe::getPopular()) as $model) :?>
             <div class="media">
                 <div class="d-flex">
                     <?php
                     $images = $model->images;
                     if (isset($images[0])) {
-                        echo Html::img($images[0]->getUrl('small'), ['alt' => $model->title . ' ' . $model->size. 'см']);
+                        echo Html::img($images[0]->getUrl('small'), ['alt' => $model->title]);
                     }
                     ?>
                 </div>
@@ -35,7 +34,6 @@ use yii\helpers\Html;
                     <a href="/catalog/<?= $model->category->slug?>/<?= $model->id?>">
                         <h4><?= $model->title ?></h4>
                     </a>
-                    <h5><?= (int)$model->price ?><i class="fa fa-ruble"></i></h5>
                 </div>
             </div>
         <?php endforeach;?>

@@ -11,6 +11,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
+use yii\widgets\Breadcrumbs;
 
 /**
  * @var yii\web\View $this
@@ -18,42 +19,61 @@ use yii\widgets\ActiveForm;
  * @var dektrium\user\models\Profile $model
  */
 
-$this->title = Yii::t('user', 'Profile settings');
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = Yii::t('user', 'Профиль');
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['']];
 ?>
 
-<div class="row profile">
-    <div class="col-md-3">
-        <?= $this->render('_menu') ?>
+<!--================End Main Header Area =================-->
+<section class="banner_area">
+    <div class="container">
+        <div class="banner_text">
+            <h3><?= $this->title ?></h3>
+            <?= Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}</li>\n",
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'options' =>  [
+                    'class' =>  ' ',
+                ]]) ?>
+        </div>
     </div>
-    <div class="col-md-9">
-        <div class="panel panel-default">
-            <div class="panel-body">
-                <?php $form = ActiveForm::begin([
-                    'id' => 'profile-form',
-                    'options' => ['class' => 'form-horizontal'],
-                    'fieldConfig' => [
-                        'template' => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
-                        'labelOptions' => ['class' => 'col-lg-3 control-label'],
-                    ],
-                    'enableAjaxValidation' => true,
-                    'enableClientValidation' => false,
-                    'validateOnBlur' => false,
-                ]); ?>
+</section>
+<!--================End Main Header Area =================-->
 
-                <?= $form->field($model, 'fio') ?>
-                <?= $form->field($model, 'phone') ?>
-                <?= $form->field($model, 'address') ?>
+<!--================Contact Form Area =================-->
+<section class="profile_form p_100">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4">
+                <?= $this->render('_menu') ?>
+            </div>
+            <div class="col-lg-8">
+                <div class="billing_form_area">
+                    <?php $form = ActiveForm::begin([
+                        'id' => 'profile-form',
+                        'options' => ['class' => 'billing_form row'],
+                        'fieldConfig' => [
+                            'template' => "{label}\n<div class=\"col-lg-9\">{input}</div>\n<div class=\"col-sm-offset-3 col-lg-9\">{error}\n{hint}</div>",
+                            'labelOptions' => ['class' => 'col-lg-3 control-label'],
+                        ],
+                        'enableAjaxValidation' => true,
+                        'enableClientValidation' => false,
+                        'validateOnBlur' => false,
+                    ]); ?>
 
-                <div class="form-group">
-                    <div class="col-lg-offset-3 col-lg-9">
-                        <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn btn-block btn-success']) ?>
-                        <br>
+                    <?= $form->field($model, 'fio', ['options' => ['class' => 'form-group col-md-12']]) ?>
+                    <?= $form->field($model, 'phone', ['options' => ['class' => 'form-group col-md-12']]) ?>
+
+                    <div class="form-group col-md-12">
+                        <div class="col-lg-9">
+                            <?= Html::submitButton(Yii::t('user', 'Save'), ['class' => 'btn pest_btn']) ?>
+                        </div>
                     </div>
-                </div>
 
-                <?php ActiveForm::end(); ?>
+                    <?php ActiveForm::end(); ?>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+<!--================End Contact Form Area =================-->
+

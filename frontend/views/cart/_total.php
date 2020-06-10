@@ -9,11 +9,8 @@ use \yii\helpers\Html;
             <div class="cart_head">
                 Итого
             </div>
-            <div class="sub_total">
-                <h5>Подитог <span id="amount_subtotal"><?=$subtotal?></span><i class="fa fa-ruble"></i></h5>
-            </div>
             <div class="total">
-                <h4>Итого <span id="amount_total"><?=$total?></span><i class="fa fa-ruble"></i></h4>
+                <h4><span id="amount_total"><?=$total?></span><i class="fa fa-ruble"></i></h4>
             </div>
             <div class="cart_footer">
                 <?= Html::a('Оформить заказ',

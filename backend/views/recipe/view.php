@@ -76,18 +76,4 @@ $this->params['breadcrumbs'][] = $this->title;
         'attributes' => $attributes,
     ]) ?>
 
-<!--    --><?php //if($model->relations):?>
-<!--        <h2>--><?//= $model->getAttributeLabel('relationsArr'); ?><!--</h2>-->
-<!--        <div class="product-images">-->
-<!--            --><?php //foreach ($model->relations as $relation):?>
-<!--                --><?php //if($relation->child->images):?>
-<!--                    <div class="product-image">-->
-<!--                        <a href="--><?//= Url::toRoute(['product/view', 'id' => $relation->child_id])?><!--">-->
-<!--                            --><?//= Html::img($relation->child->images[0]->getUrl('small'));?>
-<!--                        </a>-->
-<!--                    </div>-->
-<!--                --><?php //endif;?>
-<!--            --><?php //endforeach;?>
-<!--        </div>-->
-<!--    --><?php //endif;?>
 </div>

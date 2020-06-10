@@ -37,7 +37,7 @@ AppAsset::register($this);
                 ['label' => 'Сайт', 'url' => 'https://'.Yii::$app->params['domain']],
                 ['label' => 'Категории', 'url' => ['/category/index']],
                 ['label' => 'Рецепты', 'url' => ['/recipe/index']],
-                ['label' => 'Заказы', 'url' => ['/order/index']],
+                ['label' => 'Покупки', 'url' => ['/order/index']],
                 ['label' => 'Пользователи', 'url' => ['/user/admin/index']],
             ];
             if (Yii::$app->user->isGuest) {

@@ -1,16 +1,16 @@
 <?php
 use common\models\OrderItem;
-use common\models\Product;
+use common\models\Recipe;
 use kartik\select2\Select2;
 use yii\widgets\ActiveForm;
 use yii\helpers\Html;
 use kartik\depdrop\DepDrop;
 use yii\helpers\Url;
-use common\models\ProductDiversity;
 ?>
 
 
-<a class="btn btn-success add-item-link">Добавить позицию</a><h2>Заказ:</h2>
+<!--<a class="btn btn-success add-item-link">Добавить позицию</a>-->
+<h2>Заказ:</h2>
 <div class="add-item-form hide">
     <?php $form = ActiveForm::begin();
     $orderItem = new OrderItem(); ?>
@@ -19,26 +19,9 @@ use common\models\ProductDiversity;
             'options' => [
                 'placeholder' => Yii::t('app','Выберите товар ...'),
             ],
-            'data'=>Product::getProductArr(false),
+            'data'=>Recipe::getProductArr(false),
         ])->label(false) ?>
     </div>
-
-    <?php if(Product::cDiversity()):?>
-        <div class="col-md-3 col-sm-6">
-            <?= $form->field($orderItem, 'diversity_id')->widget(DepDrop::classname(), [
-                'data'=> [],
-                'type' => DepDrop::TYPE_SELECT2,
-                'select2Options'=>['pluginOptions'=>['allowClear'=>true]],
-                'pluginOptions'=>[
-                    'depends'=>['orderitem-product_id'],
-                    'url' => Url::to(['/order/get_diversity']),
-                    'loadingText' => 'Загрузка ...',
-                    'tokenSeparators'=>[',',' '],
-                    'placeholder' => 'Выберите расцветку ...',
-                ],
-            ])->label(false) ?>
-        </div>
-    <?php endif;?>
 
     <div class="col-md-1 col-sm-6">
         <?= $form->field($orderItem, 'quantity')->textInput(['step' => 1, 'min' => 1, 'value' => 1])->label(false) ?>
@@ -51,7 +34,7 @@ use common\models\ProductDiversity;
 </div>
 <table class="table table-striped table-bordered detail-view">
     <tr>
-        <th>Фото</th><th>Товар</th><th>Цена</th><th>Количество</th><th>Всего</th><th></th>
+        <th>Фото</th><th>Товар</th><th>Цена</th><th></th>
     </tr>
     <?php
     if($model->orderItems):
@@ -59,12 +42,7 @@ use common\models\ProductDiversity;
             <tr <?php if($item->product->category->slug == 'sale'):?>class="sale"<?php endif;?>>
                 <td>
                     <div class="product-image">
-                        <?php if(Product::cDiversity() && $item->diversity_id):?>
-                            <a href="/product/view?id=<?= $item->product->id?>">
-                                <?php $div = ProductDiversity::findOne($item->diversity_id);?>
-                                <?= Html::img($div->image->getUrl('small'));?>
-                            </a>
-                        <?php elseif($item->product->images):?>
+                        <?php if($item->product->images):?>
                             <a href="/product/view?id=<?= $item->product->id?>">
                                 <?= Html::img($item->product->images[0]->getUrl('small'));?>
                             </a>
@@ -72,27 +50,11 @@ use common\models\ProductDiversity;
                     </div>
                 </td>
                 <td>
-                    <?php if(Product::cDiversity() && $item->diversity_id):?>
-                        <?php echo $item->title . ' ' . ($item->product_id ? $item->product->size . 'см (Арт. '. $item->diversity->article .')' : '');?>
-                    <?php else:?>
-                        <?php echo $item->title . ' ' . ($item->product_id ? $item->product->size . 'см (Арт. '. $item->product->article .')' : '');?>
-                    <?php endif;?>
+                        <?php echo $item->title;?>
+
                 </td>
                 <td>
-                    <input type="text" value="<?= (int)$item->price?>" class="cartitem_price_value m_input"> р.
-                    <?= Html::button('Ок', [
-                        'class' => 'btn btn-success update_price',
-                    ]) ?>
-                </td>
-                <td>
-                    <input type="text" value="<?= $item->quantity?>" class="cartitem_qty_value m_input"> шт.
-                    <input type="hidden" value="<?= $item->id?>" class="cartitem_id">
-                    <?= Html::button('Ок', [
-                        'class' => 'btn btn-success update_qty',
-                    ]) ?>
-                </td>
-                <td>
-                    <?= (int)($item->price * $item->quantity) . ' руб.'?>
+                    <?= (int)($item->price) . ' руб.'?>
                 </td>
                 <td>
                     <?= Html::a('x', ['delete_item', 'id' => $item->id], [
@@ -101,11 +63,6 @@ use common\models\ProductDiversity;
                 </td>
             </tr>
         <?php endforeach ?>
-        <tr>
-            <td>
-                <p><string>Вес: </string> <?= $model->getWeight()?> кг</p>
-            </td>
-        </tr>
         <tr>
             <td>
                 <p><string>Итого: </string> <?= $model->getSubCost()?> руб.</p>
@@ -120,18 +77,6 @@ use common\models\ProductDiversity;
         <tr>
             <td>
                 <p><string>Итого со скидкой: </string> <?= $model->getCostWithDiscount() ?> руб.</p>
-            </td>
-        </tr>
-    <?php endif;?>
-        <?php if($model->shipping_cost):?>
-        <tr>
-            <td>
-                <p><string>Доставка: </string> <?= $model->shipping_cost?> руб.</p>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <p><string>К оплате: </string> <?= $model->getCost()?> руб.</p>
             </td>
         </tr>
     <?php endif;?>

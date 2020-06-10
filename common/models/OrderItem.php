@@ -16,6 +16,7 @@ use Yii;
  * @property double $quantity
  *
  * @property Product $product
+ * @property Recipe $recipe
  * @property ProductDiversity $diversity
  * @property Order $order
  */
@@ -65,6 +66,14 @@ class OrderItem extends \yii\db\ActiveRecord
     public function getProduct()
     {
         return $this->hasOne(Product::className(), ['id' => 'product_id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getRecipe()
+    {
+        return $this->hasOne(Recipe::className(), ['id' => 'product_id']);
     }
 
     /**

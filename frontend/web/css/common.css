@@ -60,3 +60,23 @@
     -moz-transition: -moz-transform 0s;
     transition: transform 0s;
 }
+
+.product-remove a.remove {
+    display: inline-block;
+    font-size: 1.2em;
+    height: 1em;
+    width: 1em;
+    text-align: center;
+    line-height: 1;
+    border-radius: 100%;
+    color: #454545!important;
+    cursor: pointer;
+    -webkit-transition: all 0.4s ease 0s;
+    -o-transition: all 0.4s ease 0s;
+    transition: all 0.4s ease 0s;
+}
+
+.product-remove a.remove:hover {
+    color: #fff!important;
+    background: #f195b2!important;
+}

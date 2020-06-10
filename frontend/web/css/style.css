@@ -111,13 +111,15 @@ i:before {
 
 .auth-form a,
 .cart_table_area .item-title a,
-.price_single_cost a {
+.price_single_cost a,
+.profile_form a {
   color: #454545;
 }
 
 .auth-form a:hover,
 .cart_table_area .item-title a:hover,
-.price_single_cost a:hover{
+.price_single_cost a:hover,
+.profile_form a:hover {
   color: #f195b2;
 }
 
@@ -3148,10 +3150,6 @@ i:before {
   margin-bottom: 0px;
 }
 
-.special_item_inner .specail_item .special_item_text .pink_btn {
-  margin-top: 30px;
-}
-
 .special_item_inner .specail_item .s_item_left .main_title {
   padding-bottom: 0px;
 }
@@ -5702,7 +5700,8 @@ i:before {
   padding: 30px 0px;
 }
 
-.product_details_text h5 {
+.product_details_text h5,
+.special_area h5 {
   font-size: 18px;
   color: #242424;
   font-family: "Open Sans", sans-serif;
@@ -5710,7 +5709,8 @@ i:before {
   padding: 25px 0px;
 }
 
-.product_details_text h5 span {
+.product_details_text h5 span,
+.special_area h5 span {
   font-size: 22px;
 }
 
