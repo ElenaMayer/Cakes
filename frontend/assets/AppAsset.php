@@ -26,7 +26,7 @@ class AppAsset extends AssetBundle
         'css/font-awesome.min.css',
         'vendors/linearicons/style.css',
         'vendors/flat-icon/flaticon.css',
-        'css/bootstrap.min.css?3',
+        'css/bootstrap.min.css?4',
         "vendors/revolution/css/settings.css",
         "vendors/revolution/css/layers.css",
         "vendors/revolution/css/navigation.css",
@@ -35,7 +35,7 @@ class AppAsset extends AssetBundle
         'vendors/owl-carousel/owl.carousel.min.css',
         'vendors/magnifc-popup/magnific-popup.css',
 
-        'css/style.css?17',
+        'css/style.css?18',
         'css/common.css?2',
         'css/responsive.css',
 
@@ -43,7 +43,9 @@ class AppAsset extends AssetBundle
     ];
     public $js = [
         "js/custom.js?3",
+        "js/jquery-3.2.1.min.js",
         "js/popper.min.js",
+        "js/bootstrap.min.js?1",
         "vendors/revolution/js/jquery.themepunch.tools.min.js",
         "vendors/revolution/js/jquery.themepunch.revolution.min.js",
         "vendors/revolution/js/extensions/revolution.extension.actions.min.js",
