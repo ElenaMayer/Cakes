@@ -1775,7 +1775,7 @@ i:before {
 /* Banner Area css
 ============================================================================================ */
 .banner_area {
-  background: url(../img/banner/banner-bg.jpg?2) no-repeat scroll center center;
+  background: url(/img/banner/banner-bg.jpg?3) no-repeat scroll center center;
   background-size: cover;
 }
 

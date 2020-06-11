@@ -2,10 +2,7 @@
 
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
-use kartik\select2\Select2;
-use \common\models\Product;
-use kartik\depdrop\DepDrop;
-use yii\helpers\Url;
+use vova07\imperavi\Widget;
 use common\models\Category;
 
 /* @var $this yii\web\View */
@@ -34,7 +31,22 @@ use common\models\Category;
         'form' => $form,
     ]);?>
 
-    <?= $form->field($model, 'text')->textarea(['rows' => 16]) ?>
+    <?= $form->field($model, 'text')->widget(Widget::className(), [
+        'settings' => [
+            'lang' => 'ru',
+            'minHeight' => 200,
+            'plugins' => [
+                'clips',
+                'fullscreen',
+            ],
+            'clips' => [
+                ['Lorem ipsum...', 'Lorem...'],
+                ['red', '<span class="label-red">red</span>'],
+                ['green', '<span class="label-green">green</span>'],
+                ['blue', '<span class="label-blue">blue</span>'],
+            ],
+        ],
+    ]);?>
 
     <div class="form-group">
         <?= Html::submitButton($model->isNewRecord ? 'Добавить' : 'Редактировать', ['class' => $model->isNewRecord ? 'btn btn-success' : 'btn btn-primary']) ?>
