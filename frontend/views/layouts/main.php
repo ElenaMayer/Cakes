@@ -84,7 +84,7 @@ IeAsset::register($this);
                             <?php $activeCategory = array_shift($this->context->actionParams) ?>
                             <?php foreach ($categories as $category):?>
                                 <li class="dropdown submenu <?= $activeCategory == $category->slug ? "active" : "";?>">
-                                    <a class="dropdown-toggle" data-toggle="dropdown" href="/catalog/<?= $category->slug ?>" role="button" aria-haspopup="true" aria-expanded="false"><?= $category->title ?></a>
+                                    <a class="dropdown-toggle" href="/catalog/<?= $category->slug ?>" role="button" aria-haspopup="true" aria-expanded="false"><?= $category->title ?></a>
                                 </li>
                             <?php endforeach;?>
                         </ul>
@@ -99,7 +99,6 @@ IeAsset::register($this);
         </div>
     </header>
     <!--================End Main Header Area =================-->
-
 
     <?= $content ?>
 
@@ -127,8 +126,7 @@ IeAsset::register($this);
                             <ul class="list_style">
                                 <li><a href="/about">О нас</a></li>
                                 <li><a href="/contact">Контакты</a></li>
-                                <li><a href="/shipping">Информация о доставке</a></li>
-                                <li><a href="/payment">Способы оплаты</a></li>
+                                <li><a href="/payment">Как сделать заказ</a></li>
                             </ul>
                         </aside>
                     </div>
@@ -138,7 +136,6 @@ IeAsset::register($this);
                                 <h3>Контакты</h3>
                             </div>
                             <h4><?= Yii::$app->params['phone'] ?></h4>
-                            <p><?= Yii::$app->params['address'] ?></p>
                             <h5><?= Yii::$app->params['email'] ?></h5>
                         </aside>
                     </div>

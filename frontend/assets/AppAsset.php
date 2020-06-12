@@ -35,7 +35,7 @@ class AppAsset extends AssetBundle
         'vendors/owl-carousel/owl.carousel.min.css',
         'vendors/magnifc-popup/magnific-popup.css',
 
-        'css/style.css?18',
+        'css/style.css?19',
         'css/common.css?2',
         'css/responsive.css',
 

@@ -1,43 +1,160 @@
 <?php
-use yii\helpers\Html;
+use yii\widgets\Breadcrumbs;
 
 /* @var $this yii\web\View */
-$this->title = 'Способы оплаты';
-$this->params['breadcrumbs'][] = $this->title;
+$this->title = 'Как сделать заказ';
+$this->params['breadcrumbs'][] = ['label' => $this->title, 'url' => ['']];
 ?>
-<div class="pt-10 pb-10">
+
+<!--================End Main Header Area =================-->
+<section class="banner_area">
     <div class="container">
-        <div class="row about">
-            <div class="col-sm-12">
-                <h1>Оплата заказа</h1>
-                <p>Минимальная сумма заказа <b><?=Yii::$app->params['orderMinSum'];?> рублей.</b></p>
-                <p>Отправка в другие города производится только после <b>100% оплаты</b> стоимости товара и доставки</p>
+        <div class="banner_text">
+            <h3><?= $this->title ?></h3>
+            <?= Breadcrumbs::widget([
+                'itemTemplate' => "<li>{link}</li>\n",
+                'links' => isset($this->params['breadcrumbs']) ? $this->params['breadcrumbs'] : [],
+                'options' =>  [
+                    'class' =>  ' ',
+                ]]) ?>
+        </div>
+    </div>
+</section>
+<!--================End Main Header Area =================-->
 
-                <h3>Оплата банковской картой</h3>
-                <p><i class="fa fa-angle-right"></i>Оплата банковской картой производится непосредственно после оформления заказа на сайте.</p>
-                <p><i class="fa fa-angle-right"></i>Принимаются банковские карты международных платежных систем: Visa, Mastercard, Maestro, Мир, JCB.</p>
-                <p><i class="fa fa-angle-right"></i>Так же вы можете оплатить заказ, используя Apple Pay и Google Pay.</p>
-                <p><i class="fa fa-angle-right"></i>Оплата картами производится через сервис "Яндекс Касса".</p>
-                <p><i class="fa fa-angle-right"></i>Комиссия за перевод - 0%.</p>
-
-                <h3>Перевод на карту</h3>
-                <p>При переводе на карту Вашим банком может взыматься комиссия.</p>
-                <p>Оплату можно произвести на карты следующих банков:</p>
-                <p><i class="fa fa-angle-right"></i>Сбербанк</p>
-                <p><i class="fa fa-angle-right"></i>Альфа-Банк</p>
-                <p><i class="fa fa-angle-right"></i>Тинькофф</p>
-
-                <!--h3>Наличный расчет</h3>
-                <p><i class="fa fa-angle-right"></i>Оплата при получении только наличными, в пункте выдачи (только <b>для Новосибирска</b>).</p>
-                <p><i class="fa fa-angle-right"></i>Карты при оплате в пункте выдачи не принимаются.</p-->
-
-                <h3>Банковский перевод</h3>
-                <p><i class="fa fa-angle-right"></i>Вы получите на электронную почту счёт, который необходимо оплатить в течение 2 рабочих дней.</p>
-                <p><i class="fa fa-angle-right"></i>Для отправки заказа на сборку нам необходимо получить от вас ответное письмо с подтверждением оплаты.</p>
-
-                <p>Любой из видов оплаты Вы можете выбрать самостоятельно при оформлении заказа.</p>
-                <p>Удачных покупок!</p>
+<!--================Faq Area =================-->
+<section class="faq_area p_100">
+    <div class="container">
+        <div class="main_title">
+            <h2>Frequently Ask Questions</h2>
+            <p>Discover you question from underneath or present your inquiry fromt the submit box.</p>
+        </div>
+        <div class="row faq_collaps">
+            <div class="col-lg-6">
+                <div class="left_side_collaps">
+                    <div id="accordion">
+                        <div class="card">
+                            <div class="card-header" id="headingOne">
+                                <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Bring to the table win-win survival strategie?
+                                </button>
+                            </div>
+                            <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingTwo">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Proactive domination. At the end of the day, going forward, a new normal?
+                                </button>
+                            </div>
+                            <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingThree">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Nanotechnology immersion along information?
+                                </button>
+                            </div>
+                            <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingfour">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsefour" aria-expanded="false" aria-controls="collapsefour">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Will close the loop on focusing solely?
+                                </button>
+                            </div>
+                            <div id="collapsefour" class="collapse" aria-labelledby="headingfour" data-parent="#accordion">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="left_side_collaps">
+                    <div id="accordion2">
+                        <div class="card">
+                            <div class="card-header" id="headingfive">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsefive" aria-expanded="false" aria-controls="collapsefive">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Nanotechnology immersion along information?
+                                </button>
+                            </div>
+                            <div id="collapsefive" class="collapse" aria-labelledby="headingfive" data-parent="#accordion2">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingsix">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapsesix" aria-expanded="false" aria-controls="collapsesix">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Proactive domination. At the end of the day, going forward, a new normal?
+                                </button>
+                            </div>
+                            <div id="collapsesix" class="collapse" aria-labelledby="headingsix" data-parent="#accordion2">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingseven">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseseven" aria-expanded="false" aria-controls="collapseseven">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Will close the loop on focusing solely?
+                                </button>
+                            </div>
+                            <div id="collapseseven" class="collapse" aria-labelledby="headingseven" data-parent="#accordion2">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <div class="card-header" id="headingeight">
+                                <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseeight" aria-expanded="false" aria-controls="collapseeight">
+                                    <i>+</i>
+                                    <i>-</i>
+                                    Bring to the table win-win survival strategie?
+                                </button>
+                            </div>
+                            <div id="collapseeight" class="collapse" aria-labelledby="headingeight" data-parent="#accordion2">
+                                <div class="card-body">
+                                    Lorem ipsum dolor sit amet, vix an natum labitur eleifd, mel am laoreet menandri. Ei justo complectitur duo. Ei mundi solet utos soletu possit quo. Sea cu justo laudem. An utinam consulatu eos, est facilis.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-</div>
+</section>
+<!--================End Faq Area =================-->

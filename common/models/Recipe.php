@@ -164,6 +164,24 @@ class Recipe extends \yii\db\ActiveRecord implements CartPositionInterface
         return $popProducts;
     }
 
+    public static function getFree($limit = 4)
+    {
+        $popProducts = Recipe::find()
+            ->where(['is_active' => 1])
+            ->andWhere(['price' => 0]);
+        $popProducts = $popProducts->limit($limit)->all();
+        return $popProducts;
+    }
+
+    public static function getSpecial($limit = 4)
+    {
+        $popProducts = Recipe::find()
+            ->where(['is_active' => 1])
+            ->andWhere(['>', 'price', '0']);
+        $popProducts = $popProducts->limit($limit)->all();
+        return $popProducts;
+    }
+
     public static function getProductArr($is_active = false, $is_in_stock = false)
     {
         $model = Product::find()

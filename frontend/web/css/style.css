@@ -2201,7 +2201,7 @@ i:before {
 /* Special Recipe Area css
 ============================================================================================ */
 .special_recipe_area {
-  background: url(../img/recipe/special-recipe.jpg?1) no-repeat fixed center center;
+  background: url(../img/recipe/special-recipe.jpg?2) no-repeat fixed center center;
   background-size: cover;
   padding: 85px 0px;
   position: relative;

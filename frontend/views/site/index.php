@@ -1,7 +1,7 @@
 <?php
 
 use frontend\assets\IndexAsset;
-use common\models\Product;
+use common\models\Recipe;
 use yii\helpers\Html;
 
 IndexAsset::register($this);
@@ -146,26 +146,43 @@ Yii::$app->view->registerMetaTag(['name' => 'description','content' => Yii::$app
                 <h2>Популярное</h2>
             </div>
             <div class="cake_feature_slider owl-carousel">
-                <?php foreach (array_values(Product::getPopular()) as $model) :?>
+                <?php foreach (array_values(Recipe::getFree()) as $model) :?>
                     <div class="item">
                         <div class="cake_feature_item">
+                            <a href="/catalog/<?= $model->category->slug?>/<?= $model->id?>">
                             <div class="cake_img">
-                                <?php
-                                $images = $model->images;
-                                if (isset($images[0])) {
-                                    echo Html::img($images[0]->getUrl('medium'), ['alt' => $model->title]);
-                                }?>
+                                    <?php
+                                    $images = $model->images;
+                                    if (isset($images[0])) {
+                                        echo Html::img($images[0]->getUrl('medium'), ['alt' => $model->title]);
+                                    }?>
                             </div>
-                            <div class="cake_text">
-                                <h4><?= (int)$model->price ?><i class="fa fa-ruble"></i></h4>
-                                <h3><?= $model->title ?></h3>
-                                <button type="button" class="add-to-cart pest_btn" data-id="<?= $model->id ?>">
-                                    <em>В корзину</em>
-                                    <svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32">
-                                        <path stroke-dasharray="19.79 19.79" stroke-dashoffset="19.79" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M9,17l3.9,3.9c0.1,0.1,0.2,0.1,0.3,0L23,11"/>
-                                    </svg>
-                                </button>
-                            </div>
+                        </a>
+                            <?php if(!$model->isAvailable()):?>
+                                <div class="cake_text cd-customization">
+                                    <h4><span class="amount"><?= (int)$model->price ?><i class="fa fa-ruble"></i></span></h4>
+                                    <h3><a href="/catalog/<?= $model->category->slug?>/<?= $model->id?>"><?= Html::encode($model->title) ?></a></h3>
+                                    <?php if($model->hasInCart()):?>
+                                        <a class="pest_btn" href="/cart"><i class="fa fa-check"></i> В корзине</a>
+                                    <?php else:?>
+                                        <button data-id ="<?=$model->id?>" type="button" class="add-to-cart button add_to_cart_button pest_btn">
+                                            <em>В корзину</em>
+                                            <svg x="0px" y="0px" width="32px" height="32px" viewBox="0 0 32 32">
+                                                <path stroke-dasharray="19.79 19.79" stroke-dashoffset="19.79" fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="square" stroke-miterlimit="10" d="M9,17l3.9,3.9c0.1,0.1,0.2,0.1,0.3,0L23,11"/>
+                                            </svg>
+                                        </button>
+                                    <?php endif;?>
+                                </div>
+                            <?php else:?>
+                                <div class="cake_text cd-customization">
+                                    <h3><a href="/catalog/<?= $model->category->slug?>/<?= $model->id?>"><?= Html::encode($model->title) ?></a></h3>
+                                    <?php if($model->isAvailable() == 'payment'):?>
+                                        <span class="pest_btn"><i class="fa fa-check"></i> Ожидает оплаты</span>
+                                    <?php else:?>
+                                        <a class="pest_btn" href="/catalog/<?= $model->category->slug?>/<?= $model->id?>">Смотреть</a>
+                                    <?php endif;?>
+                                </div>
+                            <?php endif;?>
                         </div>
                     </div>
                 <?php endforeach;?>
@@ -179,30 +196,26 @@ Yii::$app->view->registerMetaTag(['name' => 'description','content' => Yii::$app
 <section class="special_recipe_area">
     <div class="container">
         <div class="special_recipe_slider owl-carousel">
-            <div class="item">
+            <?php foreach (array_values(Recipe::getSpecial()) as $model) :?>
+                <div class="item">
                 <div class="media">
                     <div class="d-flex">
-                        <img src="img/recipe/recipe-1.png?1" alt="">
+                        <a href="/catalog/<?= $model->category->slug?>/<?= $model->id?>">
+                            <?php
+                            $images = $model->images;
+                            if (isset($images[0])) {
+                                echo Html::img($images[0]->getUrl('medium'), ['alt' => $model->title]);
+                            }?>
+                        </a>
                     </div>
                     <div class="media-body">
-                        <h4>Special Recipe</h4>
-                        <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi equatur uis autem vel eum.</p>
-                        <a class="w_view_btn" href="#">View Details</a>
+                        <h4><?= Html::encode($model->title) ?></h4>
+                        <p><?= Html::encode($model->description) ?></p>
+                        <a class="w_view_btn" href="/catalog/<?= $model->category->slug?>/<?= $model->id?>">Подробнее</a>
                     </div>
                 </div>
             </div>
-            <div class="item">
-                <div class="media">
-                    <div class="d-flex">
-                        <img src="img/recipe/recipe-1.png?1" alt="">
-                    </div>
-                    <div class="media-body">
-                        <h4>Special Recipe</h4>
-                        <p>Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi equatur uis autem vel eum.</p>
-                        <a class="w_view_btn" href="#">View Details</a>
-                    </div>
-                </div>
-            </div>
+            <?php endforeach;?>
         </div>
     </div>
 </section>
